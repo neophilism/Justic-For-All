@@ -13,12 +13,10 @@
     "test": "node --test tests/*.test.mjs",
     "check": "pnpm test && pnpm lint && pnpm scan:secrets && pnpm typecheck && pnpm build",
     "db:migrate": "pnpm --filter @jfa/db migrate",
-    "lint": "eslint apps/web packages --max-warnings=0",
+    "lint": "eslint . --max-warnings=0",
     "scan:secrets": "node scripts/scan-secrets.mjs"
   },
   "devDependencies": {
-    "eslint": "9.36.0",
-    "@typescript-eslint/parser": "8.46.1",
-    "@typescript-eslint/eslint-plugin": "8.46.1"
+    "eslint": "9.36.0"
   }
 }

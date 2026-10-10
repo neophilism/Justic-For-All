@@ -6,7 +6,7 @@ Security release posture: **development, not certified**. The project must not d
 
 - Pinned Node and pnpm; pnpm workspace lockfile generated on CI, reviewed and committed; CI now requires frozen installs.
 - Read-only GitHub Actions token permissions; first-party Actions pinned to observed immutable source SHAs; no deploy secrets in pull-request workflows.
-- ESLint via TypeScript parser and plugin (avoids deprecated Next ESLint configuration dependency chain) and tests/build.
+- ESLint for JavaScript/MJS source and strict TypeScript compile-time checking for all TS/TSX packages. The abandoned TypeScript ESLint plugin dependency introduced an unpatched high-severity `braces` vulnerability; typed lint plugin rules are deferred until a safe upstream dependency chain can be verified.
 - Security upgrade in this review: Next.js 15.5.24, patched PostCSS and Sharp resolutions. Review actual pnpm lockfile resolution and audit output before acceptance; do not assume requested overrides resolved optional dependencies.
 - Tracked-file static secret heuristics (private-key headers, GitHub token-like strings, Neon credential patterns, AWS access-key IDs). False negatives are possible; secrets must still be stored only in a provider secret manager and independently reviewed.
 - Dependabot proposals require passing checks and review.

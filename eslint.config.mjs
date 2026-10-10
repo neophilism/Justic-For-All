@@ -1,12 +1,12 @@
-import tsParser from "@typescript-eslint/parser";
-import tsPlugin from "@typescript-eslint/eslint-plugin";
-
-/** Typed web/worker lint without the vulnerable fast-glob -> braces toolchain. */
+// ESLint for JavaScript build/runtime configuration and scripts.
+// Strict TypeScript 5.9 handles typed source; a safe AST TypeScript lint
+// pipeline may be reconsidered after upstream braces dependency is removed.
 export default [
-  {ignores:["**/.next/**","**/node_modules/**","**/next-env.d.ts","**/coverage/**"]},
-  {files:["**/*.{ts,tsx}"],
-    languageOptions:{parser:tsParser,parserOptions:{ecmaFeatures:{jsx:true},sourceType:"module"}},
-    plugins:{"@typescript-eslint":tsPlugin},
-    rules:{"@typescript-eslint/no-explicit-any":"error","@typescript-eslint/no-unused-vars":["error",{argsIgnorePattern:"^_"}]}
+  { ignores:["**/.next/**","**/node_modules/**","**/next-env.d.ts","**/coverage/**",
+             "**/pnpm-lock.yaml","**/*.ts","**/*.tsx"] },
+  { files:["**/*.{js,mjs}"],
+    languageOptions:{ecmaVersion:"latest",sourceType:"module"},
+    rules:{"no-eval":"error","no-var":"error","eqeqeq":"error",
+           "no-unused-vars":["error",{argsIgnorePattern:"^_",varsIgnorePattern:"^_"}]}
   }
 ];
