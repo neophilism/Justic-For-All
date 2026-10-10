@@ -17,12 +17,12 @@ The shared public website, initiative directory, editorial experience, consent b
 Use Node.js 22.16.0 (see `.node-version`), Corepack and pinned pnpm 10.18.3. Run:
 
 ```sh
-corepack pnpm install --no-frozen-lockfile
+corepack pnpm install --frozen-lockfile
 corepack pnpm check
 corepack pnpm dev
 ```
 
-The only Next.js server is `apps/web`. A local PostgreSQL + mail-catcher development environment is described in [docs/DEV_SETUP.md](docs/DEV_SETUP.md). Packages `core`, `contracts`, `ui`, `adapters`, `security` and a disabled `apps/worker` provide clear workspace boundaries. A committed frozen lockfile is a pending JFA-07 supply-chain item; do not interpret this scaffold as production hardened.
+The only Next.js server is `apps/web`. A local PostgreSQL + mail-catcher development environment is described in [docs/DEV_SETUP.md](docs/DEV_SETUP.md). Packages `core`, `contracts`, `ui`, `adapters`, `security` and a disabled `apps/worker` provide clear workspace boundaries. The workspace now pins a reviewed lockfile; this does not establish production security certification.
 
 ## Critical boundaries
 

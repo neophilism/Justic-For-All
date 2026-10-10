@@ -4,7 +4,7 @@ Security release posture: **development, not certified**. The project must not d
 
 ## Current controls
 
-- Pinned Node and pnpm; pnpm workspace lockfile will be generated on CI, reviewed and committed before switching to frozen installs.
+- Pinned Node and pnpm; pnpm workspace lockfile generated on CI, reviewed and committed; CI now requires frozen installs.
 - Read-only GitHub Actions token permissions; first-party Actions pinned to observed immutable source SHAs; no deploy secrets in pull-request workflows.
 - ESLint/TypeScript and tests/build.
 - Tracked-file static secret heuristics (private-key headers, GitHub token-like strings, Neon credential patterns, AWS access-key IDs). False negatives are possible; secrets must still be stored only in a provider secret manager and independently reviewed.
@@ -13,7 +13,7 @@ Security release posture: **development, not certified**. The project must not d
 
 ## Additional controls required before production approval
 
-- Generate and commit a deterministic, reviewed `pnpm-lock.yaml`; run `pnpm install --frozen-lockfile` in CI.
+- Periodically review and regenerate `pnpm-lock.yaml` in a dedicated PR using the pinned toolchain and run `pnpm install --frozen-lockfile` in CI.
 - Dependency advisory assessment including relevant reachable risks, accepted exceptions, license summary and remediation dates. Do not assume the upstream repositories' lack of SPDX license permits copying their source.
 - SBOM (CycloneDX or SPDX), release provenance, signing, artifact retention and verifiable build/release identity.
 - Browser accessibility tests, hostile upload/XSS/CSRF and service-to-service auth tests for any private functionality.

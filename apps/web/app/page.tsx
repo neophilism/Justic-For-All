@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="wrap">
@@ -5,8 +7,8 @@ export default function Home() {
       <h1>Justice For All</h1>
       <p className="lede">A place to learn about peaceful civic initiatives, public records, and opportunities to contribute.</p>
       <div className="actions">
-        <a className="primary" href="/initiatives">Explore initiatives</a>
-        <a className="secondary" href="/get-involved">Ways to help</a>
+        <Link className="primary" href="/initiatives">Explore initiatives</Link>
+        <Link className="secondary" href="/get-involved">Ways to help</Link>
       </div>
       <section aria-labelledby="status">
         <h2 id="status">Platform status</h2>
