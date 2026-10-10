@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.tsx"
   },
-  "types": "./src/index.ts",
-  "dependencies": {}
+  "types": "./src/index.tsx",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^19.1.1"
+  }
 }
