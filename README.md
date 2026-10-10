@@ -22,7 +22,7 @@ corepack pnpm check
 corepack pnpm dev
 ```
 
-The only Next.js server is `apps/web`. Packages `core`, `contracts`, `ui`, `adapters`, `security` and a disabled `apps/worker` provide clear workspace boundaries. A committed frozen lockfile is a pending JFA-07 supply-chain item; do not interpret this scaffold as production hardened.
+The only Next.js server is `apps/web`. A local PostgreSQL + mail-catcher development environment is described in [docs/DEV_SETUP.md](docs/DEV_SETUP.md). Packages `core`, `contracts`, `ui`, `adapters`, `security` and a disabled `apps/worker` provide clear workspace boundaries. A committed frozen lockfile is a pending JFA-07 supply-chain item; do not interpret this scaffold as production hardened.
 
 ## Critical boundaries
 
