@@ -1,0 +1,22 @@
+project:
+  name: Justic-For-All
+  display_name: Justice For All — Core Platform
+  repository: neophilism/Justic-For-All
+  status: active-development
+
+roadmap:
+  version: 1
+  planned_prs: 50
+  approved: true
+
+milestones:
+  - name: Foundations and architecture
+    prs: 8
+  - name: Public experience and publishing
+    prs: 10
+  - name: Identity privacy and moderation
+    prs: 11
+  - name: Cross-platform integrations
+    prs: 11
+  - name: Operations and release
+    prs: 10
