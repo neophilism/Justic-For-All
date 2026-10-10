@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "initiatives": [
+    {
+      "slug": "injustice-project",
+      "name": "The Injustice Project / Injustice Archive",
+      "description": "A future testimony initiative with protected intake, review, and individual publication decisions.",
+      "overview": "People whose rights may have been violated, witnesses, family members, and others seeking to document harmful conduct should be able to understand choices before disclosing information.",
+      "status": "planning"
+    },
+    {
+      "slug": "public-record",
+      "name": "The Public Record",
+      "description": "A planned civic program for public-record requests and the responsible publication of official responses.",
+      "overview": "People will be able to learn about records requests, inspect request status, and examine official responses when the separate participation service is verified.",
+      "status": "planning"
+    },
+    {
+      "slug": "liberty-nodes",
+      "name": "Liberty Nodes",
+      "description": "A planned distributed archive for approved public materials and independent integrity checks.",
+      "overview": "Technically experienced volunteers may eventually help preserve and verify materials explicitly approved for public publication. This will not contain restricted private testimony.",
+      "status": "planning"
+    },
+    {
+      "slug": "justice-teams",
+      "name": "Justice Teams",
+      "description": "A proposed way to connect people seeking assistance with voluntary skills and support.",
+      "overview": "The dedicated service will require identity, eligibility, case-routing and consent controls before any matching or private communication.",
+      "status": "planning"
+    },
+    {
+      "slug": "witness-corps",
+      "name": "Witness Corps",
+      "description": "A planned responsible-observation and incident-documentation initiative.",
+      "overview": "Volunteer observers may eventually receive training materials and submit incident records through protected workflows, with publication separate from intake.",
+      "status": "planning"
+    },
+    {
+      "slug": "one-question",
+      "name": "One Question",
+      "description": "A planned public accountability and response-tracking initiative.",
+      "overview": "Participants will be able to examine documented questions posed to officials and distinguish answers from questions that remain unanswered.",
+      "status": "planning"
+    },
+    {
+      "slug": "justice-works",
+      "name": "Justice Works",
+      "description": "A future platform for voluntary artistic and educational collaborations.",
+      "overview": "Creative contributors may work with public accounts only through appropriate permissions, attribution and responsible contextualization.",
+      "status": "planning"
+    },
+    {
+      "slug": "public-witness",
+      "name": "Public Witness",
+      "description": "A planned hub for peaceful public participation and civic observation.",
+      "overview": "Events and educational materials may become available after organizers verify their accuracy, accessibility and any applicable requirements.",
+      "status": "planning"
+    },
+    {
+      "slug": "human-firewall",
+      "name": "Human Firewall / Consent Strike",
+      "description": "A future educational and voluntary-commitment initiative about data sharing.",
+      "overview": "The project will explain lawful privacy and consent choices without presuming participation, tracking nonparticipants or pressuring anyone.",
+      "status": "planning"
+    },
+    {
+      "slug": "surveillance-enabler-boycott",
+      "name": "Surveillance-Enabler Boycott",
+      "description": "A proposed research and voluntary consumer-information program.",
+      "overview": "Publicly documented source material and clear distinctions between verified facts and commentary must precede company-specific pages.",
+      "status": "planning"
+    }
+  ]
+}
