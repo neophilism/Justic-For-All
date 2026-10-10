@@ -59,3 +59,4 @@ jobs:
           psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/migrations/0001_core.sql
           psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/seeds/0001_demo.sql
           psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/tests/001_schema_assertions.sql
+          psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/tests/002_editorial_draft_privacy.sql
