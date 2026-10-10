@@ -18,12 +18,7 @@ jobs:
         with:
           node-version-file: '.node-version'
       - name: Install workspace dependencies
-        run: pnpm install --no-frozen-lockfile
-      - name: Export patched dependency lockfile for review (temporary)
-        run: |
-          echo JFA_LOCK_START
-          base64 -w76 pnpm-lock.yaml
-          echo JFA_LOCK_END
+        run: pnpm install --frozen-lockfile
       - name: Dependency audit (high and critical advisories)
         run: pnpm audit --audit-level high
       - name: Dependency license inventory
