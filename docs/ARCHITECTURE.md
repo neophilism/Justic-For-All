@@ -18,3 +18,15 @@ The core **does not own**: private testimony, evidence and cases (Injustice Proj
 ## Operational status
 
 Repository bootstrap only. No Render/Neon service or production safety assurance is established by these files.
+
+## Source layout after JFA-03
+
+- `apps/web/app/`: only web runtime and public routes
+- `apps/worker/`: disabled until its job contracts are reviewed
+- `packages/contracts/`: versioned core DTOs and API representations
+- `packages/core/`: initiative registry and pure policy logic
+- `packages/ui/`: shared accessible presentation primitives
+- `packages/adapters/`: disabled external adapters until verified
+- `packages/security/`: classification helpers; not a cryptographic implementation
+
+See [ADR-0002](ADR/0002-package-boundaries.md).

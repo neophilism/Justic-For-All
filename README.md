@@ -12,6 +12,18 @@ The shared public website, initiative directory, editorial experience, consent b
 - [Engine Room project registration](.exechub/project.yml)
 - [Contributing and security](CONTRIBUTING.md)
 
+## Local development
+
+Use Node.js 22.16.0 (see `.node-version`), Corepack and pinned pnpm 10.18.3. Run:
+
+```sh
+corepack pnpm install --no-frozen-lockfile
+corepack pnpm check
+corepack pnpm dev
+```
+
+The only Next.js server is `apps/web`. Packages `core`, `contracts`, `ui`, `adapters`, `security` and a disabled `apps/worker` provide clear workspace boundaries. A committed frozen lockfile is a pending JFA-07 supply-chain item; do not interpret this scaffold as production hardened.
+
 ## Critical boundaries
 
 This repository is the **core portal**, not a replacement for testimony intake, FOIA filing, distributed archival storage, case management, or the reusable civic engines. Never collect confidential testimony through a generic website form; route it to a verified dedicated protected service when that service is actually available.

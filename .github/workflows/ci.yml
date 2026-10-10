@@ -8,13 +8,20 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.3
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      - run: npm install --no-audit --no-fund
-      - run: npm test
-      - run: npm run typecheck
-      - run: npm run build
+          node-version-file: '.node-version'
+      - name: Install workspace dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Test
+        run: pnpm test
+      - name: Typecheck web and worker
+        run: pnpm typecheck
+      - name: Build public web
+        run: pnpm build
