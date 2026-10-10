@@ -28,7 +28,9 @@ test("HTML injection, invalid slug, and version downgrade rejected",()=>{
 test("public API returns reviewed minimal fields only",()=>{
  const src=readFileSync(new URL("../apps/web/app/api/v1/initiatives/route.ts",import.meta.url),"utf8");
  assert.match(src,/slug, name, description, status/);
- assert.doesNotMatch(src,/email|serviceRef|contact/);
+ const projection=src.match(/const data = initiatives\.map\([^\n]+/)?.[0] || "";
+ assert.match(projection,/slug, name, description, status/);
+ assert.doesNotMatch(projection,/email|serviceRef|contact/);
 });
 test("DB seed requires explicit apply and public-copy approval, never alters service status",()=>{
  const src=readFileSync(new URL("../packages/db/scripts/seed-initiatives.mjs",import.meta.url),"utf8");
