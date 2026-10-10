@@ -11,7 +11,12 @@
     "build": "pnpm --filter @jfa/web build",
     "typecheck": "pnpm --filter @jfa/web typecheck && pnpm --filter @jfa/worker typecheck && pnpm --filter @jfa/db typecheck",
     "test": "node --test tests/*.test.mjs",
-    "check": "pnpm test && pnpm typecheck && pnpm build",
-    "db:migrate": "pnpm --filter @jfa/db migrate"
+    "check": "pnpm test && pnpm lint && pnpm scan:secrets && pnpm typecheck && pnpm build",
+    "db:migrate": "pnpm --filter @jfa/db migrate",
+    "lint": "eslint . --max-warnings=0",
+    "scan:secrets": "node scripts/scan-secrets.mjs"
+  },
+  "devDependencies": {
+    "eslint": "9.36.0"
   }
 }

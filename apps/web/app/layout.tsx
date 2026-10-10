@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import "./styles.css";
 
@@ -13,11 +14,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <header className="site-header">
-          <a href="/" className="brand">Justice For All</a>
+          <Link href="/" className="brand">Justice For All</Link>
           <nav aria-label="Main navigation">
-            <a href="/about">About</a>
-            <a href="/initiatives">Initiatives</a>
-            <a href="/get-involved">Get involved</a>
+            <Link href="/about">About</Link>
+            <Link href="/initiatives">Initiatives</Link>
+            <Link href="/get-involved">Get involved</Link>
           </nav>
         </header>
         <main id="main">{children}</main>

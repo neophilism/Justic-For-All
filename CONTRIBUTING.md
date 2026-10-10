@@ -4,7 +4,7 @@ The canonical requirements and roadmap are in [docs/DEVELOPMENT_PLAN.md](docs/DE
 
 1. Work in short branches named for the real planned work package (`jfa-01-...`) and open a reviewed PR.
 2. Preserve one source of truth per data class. Do not place confidential testimony, evidence, or case data in this public repository or generic intake forms.
-3. Before requesting merge, run `corepack pnpm install --no-frozen-lockfile && corepack pnpm check` from the repository root. Lockfile enforcement will be added with JFA-07; do not treat a non-frozen install as reproducible.
+3. Before requesting merge, run `corepack pnpm install --frozen-lockfile && corepack pnpm check` from the repository root. Install uses the source-controlled frozen pnpm lockfile.
 4. Document negative-path tests, security and accessibility implications, migration handling and versioned integration contracts.
 5. Add verified evidence to [docs/ACCEPTANCE_EVIDENCE.md](docs/ACCEPTANCE_EVIDENCE.md). Never use planned PR IDs as if they were GitHub PR numbers or infer success from a commit alone.
 6. Link the actual GitHub PR in the work-package mapping only after it merges and its checks succeed.
