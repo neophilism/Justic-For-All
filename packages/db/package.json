@@ -17,6 +17,7 @@
   },
   "scripts": {
     "migrate": "node scripts/migrate.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seed:initiatives": "node scripts/seed-initiatives.mjs"
   }
 }
