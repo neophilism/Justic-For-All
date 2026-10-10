@@ -14,3 +14,8 @@ export const initiatives: readonly Initiative[] = Object.freeze([
   {slug:"human-firewall",name:"Human Firewall / Consent Strike",description:"Educational resources about voluntary data-sharing decisions.",status:"planning"},
   {slug:"surveillance-enabler-boycott",name:"Surveillance-Enabler Boycott",description:"Information on lawful, voluntary consumer decisions.",status:"planning"}
 ]);
+
+/** Returns a published public registry entry; never reveals internal connector metadata. */
+export function findPublicInitiative(slug: string): Initiative | undefined {
+  return initiatives.find((item) => item.slug === slug);
+}
