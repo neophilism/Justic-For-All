@@ -12,6 +12,13 @@ function cleanText(value,max,name,min=1){
  if(typeof value!=="string"||value.length<min||value.length>max||value.trim()!==value||/[<>]/.test(value))throw new Error("Unsafe or invalid "+name);
  return value;
 }
+function cleanRichRun(value){
+ // Whitespace at run boundaries separates adjacent formatted spans.
+ if(typeof value!=="string"||value.length<1||value.length>1200||!value.trim()||/[<>]/.test(value)) {
+  throw new Error("Unsafe or invalid rich-text run");
+ }
+ return value;
+}
 function safeReference(value){
  const raw=cleanText(value,1500,"source reference");
  let parsed;
@@ -41,7 +48,7 @@ export function validateEditorialDocument(value){
    if(!Array.isArray(block.runs)||block.runs.length<1||block.runs.length>30)throw new Error("Invalid text runs");
    for(const run of block.runs){
     if(!exact(run,["text","emphasis"])||!allowedEmphasis.has(run.emphasis))throw new Error("Invalid rich-text run");
-    total+=cleanText(run.text,1200,"rich-text run").length;
+    total+=cleanRichRun(run.text).length;
    }
   }
  }
