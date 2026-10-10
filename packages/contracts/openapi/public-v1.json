@@ -1,0 +1,272 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Justice For All Core Public API",
+    "version": "1.0.0",
+    "description": "Only implemented, approved-public core routes. Private action routes are not exposed."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Same origin; not a verified production base URL"
+    }
+  ],
+  "paths": {
+    "/api/v1/initiatives": {
+      "get": {
+        "operationId": "listInitiatives",
+        "summary": "List published initiative summaries and accurate availability states",
+        "tags": [
+          "Initiatives"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitiativeListEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/initiatives/{slug}": {
+      "get": {
+        "operationId": "getInitiative",
+        "summary": "Get one public initiative summary",
+        "tags": [
+          "Initiatives"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitiativeEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown initiative",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/openapi.json": {
+      "get": {
+        "operationId": "getOpenApi",
+        "summary": "Self-describing OpenAPI 3.1 document",
+        "responses": {
+          "200": {
+            "description": "OpenAPI document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "summary": "Public process liveness only",
+        "responses": {
+          "200": {
+            "description": "Process alive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "service",
+                    "check"
+                  ],
+                  "properties": {
+                    "status": {
+                      "const": "ok"
+                    },
+                    "service": {
+                      "type": "string"
+                    },
+                    "check": {
+                      "const": "liveness"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "operationId": "ready",
+        "summary": "Deployment readiness; 503 until PostgreSQL is actually connected",
+        "responses": {
+          "503": {
+            "description": "Database not yet configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "check"
+                  ],
+                  "properties": {
+                    "status": {
+                      "const": "not_ready"
+                    },
+                    "check": {
+                      "const": "readiness"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Initiative": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slug",
+          "name",
+          "description",
+          "status"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "planning",
+              "building",
+              "available"
+            ]
+          }
+        }
+      },
+      "InitiativeEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "api_version",
+          "request_id",
+          "data"
+        ],
+        "properties": {
+          "api_version": {
+            "const": "1"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Initiative"
+          }
+        }
+      },
+      "InitiativeListEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "api_version",
+          "request_id",
+          "data"
+        ],
+        "properties": {
+          "api_version": {
+            "const": "1"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Initiative"
+            }
+          }
+        }
+      },
+      "ApiErrorEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "api_version",
+          "request_id",
+          "error"
+        ],
+        "properties": {
+          "api_version": {
+            "const": "1"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

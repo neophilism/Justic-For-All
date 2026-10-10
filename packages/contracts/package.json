@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./openapi/v1": "./openapi/public-v1.json"
   },
   "types": "./src/index.ts",
   "dependencies": {}
