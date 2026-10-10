@@ -1,0 +1,442 @@
+{
+  "schemaVersion": 1,
+  "created": "2026-10-10",
+  "reference": {
+    "repository": "neophilism/End-To-End-Everywhere-Security-Architecture-Standard",
+    "commit": "6ec85d51f9207da31f0e90fd8a7c82ffff8448f6",
+    "observedVersion": "0.9.0-rc.2-dev",
+    "conformanceClaim": "none",
+    "independentReview": false
+  },
+  "assurance": {
+    "appRelease": "0.1.0-dev",
+    "assessedBuild": null,
+    "productionConformance": "unassessed",
+    "securityOwner": "repository owner pending appointment"
+  },
+  "flows": [
+    {
+      "id": "F01",
+      "name": "Public HTML and static assets",
+      "state": "implemented",
+      "source": "browser",
+      "destination": "core web server",
+      "dataClass": "PUBLIC_APPROVED",
+      "protectedContent": false,
+      "profileState": "not_applicable_documented",
+      "keyAuthority": "TLS origin operator; not an E2EE recipient",
+      "metadata": "Client IP, request URL, timing visible to hosting and network operators",
+      "applicability": "Public informational content; no end-to-end recipient-private payload",
+      "controls": [
+        "published-content-only",
+        "https-production-gate",
+        "log-redaction"
+      ],
+      "evidence": [
+        "apps/web/app/page.tsx",
+        "apps/web/app/layout.tsx"
+      ],
+      "riskRefs": [
+        "R04",
+        "R05",
+        "R06"
+      ]
+    },
+    {
+      "id": "F02",
+      "name": "Initiative public API GET",
+      "state": "implemented",
+      "source": "browser",
+      "destination": "core API",
+      "dataClass": "PUBLIC_APPROVED",
+      "protectedContent": false,
+      "profileState": "not_applicable_documented",
+      "keyAuthority": "TLS origin operator; no confidential recipient keys",
+      "metadata": "Client IP, initiative slug and request timestamps visible",
+      "applicability": "Only enumerated initiative summary fields are public. Not a private E2EE flow.",
+      "controls": [
+        "explicit-public-dto",
+        "read-only",
+        "versioned-openapi"
+      ],
+      "evidence": [
+        "apps/web/app/api/v1/initiatives/route.ts",
+        "packages/contracts/openapi/public-v1.json"
+      ],
+      "riskRefs": [
+        "R01",
+        "R05"
+      ]
+    },
+    {
+      "id": "F03",
+      "name": "Process liveness and DB readiness",
+      "state": "implemented",
+      "source": "monitor or browser",
+      "destination": "core API then optional core DB",
+      "dataClass": "INTERNAL_OPERATIONS",
+      "protectedContent": false,
+      "profileState": "not_applicable_documented",
+      "keyAuthority": "Server-managed database/TLS credentials if configured",
+      "metadata": "Health status, response timestamps and requester IP visible",
+      "applicability": "Minimal health information; DB connection uses transport controls and is not E2EE",
+      "controls": [
+        "no-stacktrace",
+        "no-credentials-in-response",
+        "readiness-fail-closed"
+      ],
+      "evidence": [
+        "apps/web/app/health/route.ts",
+        "apps/web/app/ready/route.ts"
+      ],
+      "riskRefs": [
+        "R02",
+        "R06"
+      ]
+    },
+    {
+      "id": "F04",
+      "name": "Core database: initiatives, public CMS and private metadata",
+      "state": "partially_implemented",
+      "source": "core server",
+      "destination": "dedicated core Postgres",
+      "dataClass": "PERSONAL_RESTRICTED",
+      "protectedContent": true,
+      "profileState": "needs_component_assessment",
+      "keyAuthority": "Database/operator for SQL access; app-level field keys not provisioned",
+      "metadata": "Schema, query metadata, DB traffic and client principal visible to hosting provider",
+      "applicability": "Restricted identity and contact tables exist but no production private writing or E2EE policy is implemented; encryption at rest is not E2EE",
+      "controls": [
+        "db-policies-before-live",
+        "field-encryption-before-contacts",
+        "least-privileged-db-roles"
+      ],
+      "evidence": [
+        "db/migrations/0001_core.sql",
+        "docs/DATABASE.md"
+      ],
+      "riskRefs": [
+        "R01",
+        "R02",
+        "R03"
+      ]
+    },
+    {
+      "id": "F05",
+      "name": "Public CMS authoring, reviewer separation and publication",
+      "state": "planned",
+      "source": "approved staff browser",
+      "destination": "core staff API and CMS",
+      "dataClass": "EDITORIAL_DRAFT",
+      "protectedContent": true,
+      "profileState": "needs_component_assessment",
+      "keyAuthority": "CMS service operator, draft reviewer and account provider TBD",
+      "metadata": "Editor identity, draft titles, review timestamps and revisions may be visible",
+      "applicability": "Draft content protected from unauthorized readers; E2E recipient model not selected. No web admin currently exposed.",
+      "controls": [
+        "server-side-role-checks",
+        "dual-approval",
+        "publication-projection",
+        "accessibility"
+      ],
+      "evidence": [
+        "docs/DEVELOPMENT_PLAN.md"
+      ],
+      "riskRefs": [
+        "R01",
+        "R03",
+        "R07"
+      ]
+    },
+    {
+      "id": "F06",
+      "name": "Identity recovery and subscription contact preferences",
+      "state": "planned",
+      "source": "consenting user",
+      "destination": "identity/email provider and core DB",
+      "dataClass": "PERSONAL_RESTRICTED",
+      "protectedContent": true,
+      "profileState": "needs_component_assessment",
+      "keyAuthority": "User/auth provider and application contact encryption keys TBD",
+      "metadata": "Account and email correlation, messages and provider records may be visible",
+      "applicability": "Need authenticated client protection and cryptographic recipient/control specification. Not equivalent to HTTPS.",
+      "controls": [
+        "no-prechecked-consent",
+        "provider-scoped-keys",
+        "verified-optin",
+        "erasure-policy"
+      ],
+      "evidence": [
+        "docs/DEVELOPMENT_PLAN.md"
+      ],
+      "riskRefs": [
+        "R01",
+        "R02",
+        "R08"
+      ]
+    },
+    {
+      "id": "F07",
+      "name": "Confidential testimony, evidence and case referral",
+      "state": "blocked",
+      "source": "potential submitter",
+      "destination": "separate Secure Intake/Injustice Archive",
+      "dataClass": "HIGH_RISK_CONFIDENTIAL",
+      "protectedContent": true,
+      "profileState": "blocked_until_independent_evidence",
+      "keyAuthority": "Specialized intake recipients and verification authority not approved",
+      "metadata": "Source IP, receipt, timing, case relationship and file metadata may identify reporters",
+      "applicability": "No production E2EE capability or end-to-end security claim. Must not accept through generic core website.",
+      "controls": [
+        "no-generic-intake-form",
+        "no-public-event-payloads",
+        "independent-intake-security-gate"
+      ],
+      "evidence": [
+        "docs/INTEGRATIONS.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "riskRefs": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R07"
+      ]
+    },
+    {
+      "id": "F08",
+      "name": "Cross-service signed event delivery",
+      "state": "planned",
+      "source": "approved downstream service",
+      "destination": "core API/outbox",
+      "dataClass": "INTERNAL_OPERATIONS",
+      "protectedContent": true,
+      "profileState": "needs_component_assessment",
+      "keyAuthority": "Versioned service signing keys (not created)",
+      "metadata": "Cross-service event patterns, sender identities, volumes visible",
+      "applicability": "Signed events/transport integrity do not imply private-content E2EE. Exclude sensitive payloads by schema.",
+      "controls": [
+        "m2m-signature",
+        "replay-detection",
+        "schema-allowlist",
+        "no-sensitive-payload",
+        "rate-limit"
+      ],
+      "evidence": [
+        "docs/DEVELOPMENT_PLAN.md"
+      ],
+      "riskRefs": [
+        "R02",
+        "R03",
+        "R07"
+      ]
+    },
+    {
+      "id": "F09",
+      "name": "FOIA/public-registry approved read-only projections",
+      "state": "planned",
+      "source": "approved public source",
+      "destination": "core search/caches and browser",
+      "dataClass": "PUBLIC_APPROVED",
+      "protectedContent": false,
+      "profileState": "not_applicable_documented",
+      "keyAuthority": "Public source provenance/signature authority to verify",
+      "metadata": "Queries and source interests visible to website and source host",
+      "applicability": "Public publication flow; provenance, withdrawal and authentic source matter more than content secrecy.",
+      "controls": [
+        "source-citation",
+        "allowlisted-projection",
+        "withdrawal-reconciliation"
+      ],
+      "evidence": [
+        "docs/INTEGRATIONS.md"
+      ],
+      "riskRefs": [
+        "R02",
+        "R05",
+        "R07"
+      ]
+    },
+    {
+      "id": "F10",
+      "name": "Liberty Nodes public replica publication",
+      "state": "blocked",
+      "source": "core approved publisher",
+      "destination": "untrusted independent replica network",
+      "dataClass": "PUBLIC_REPLICATED",
+      "protectedContent": false,
+      "profileState": "blocked_until_distribution_review",
+      "keyAuthority": "Public artifact signer TBD; replicas retain copies independently",
+      "metadata": "Content URLs, replica geography, publication timing and request patterns visible",
+      "applicability": "Public immutable/distributed material is not confidential E2EE. Irreversible distribution and withdrawal limitations must be disclosed.",
+      "controls": [
+        "only-explicit-public-release",
+        "replication-approval",
+        "no-restricted-content",
+        "withdrawal-limit-disclosure"
+      ],
+      "evidence": [
+        "docs/DEVELOPMENT_PLAN.md"
+      ],
+      "riskRefs": [
+        "R02",
+        "R04",
+        "R07"
+      ]
+    },
+    {
+      "id": "F11",
+      "name": "Development GitHub and artifact supply chain",
+      "state": "implemented",
+      "source": "reviewed source GitHub",
+      "destination": "CI/build artifact and eventual deployment",
+      "dataClass": "INTERNAL_OPERATIONS",
+      "protectedContent": false,
+      "profileState": "not_applicable_documented",
+      "keyAuthority": "GitHub Actions service identities; release signing not implemented",
+      "metadata": "Repo names, PRs, timing and build logs visible to providers",
+      "applicability": "Software provenance is not user E2EE. No production artifact attestation/certification issued.",
+      "controls": [
+        "pinned-actions",
+        "frozen-lockfile",
+        "secret-scan",
+        "dependency-audit"
+      ],
+      "evidence": [
+        ".github/workflows/ci.yml",
+        "docs/SUPPLY_CHAIN.md"
+      ],
+      "riskRefs": [
+        "R03",
+        "R06"
+      ]
+    }
+  ],
+  "threats": [
+    {
+      "id": "R01",
+      "severity": "critical",
+      "actor": "Unauthorized visitor or malicious contributor",
+      "scenario": "Access to private profiles, contacts, draft content or case details through broken object- or field-level authorization",
+      "controls": [
+        "deny-by-default auth in every private handler",
+        "tenant/purpose scoping",
+        "negative tests for all cross-role/object transitions"
+      ],
+      "currentMitigation": "Public endpoint returns only allowlisted DTO; private routes remain disabled",
+      "remainingRisk": "Authentication/authorization and identity have not been implemented",
+      "status": "open"
+    },
+    {
+      "id": "R02",
+      "severity": "critical",
+      "actor": "Compromised application host, provider principal or secret",
+      "scenario": "Exfiltration, tampering, or disclosure of contact data and operational keys",
+      "controls": [
+        "secret-store only",
+        "least-privilege identities",
+        "encryption with verifiable recipient/key custody",
+        "revocation/rotation runbooks"
+      ],
+      "currentMitigation": "Private intake inactive, secrets not in repository; DB URL validation",
+      "remainingRisk": "Hosted KMS, encrypted contacts and infrastructure not implemented",
+      "status": "open"
+    },
+    {
+      "id": "R03",
+      "severity": "high",
+      "actor": "Malicious insider or compromised editor",
+      "scenario": "Unapproved publication, audit deletion or quiet replacement of records",
+      "controls": [
+        "separation of duties",
+        "append-only events",
+        "independent reviewer",
+        "public revision history",
+        "alerting"
+      ],
+      "currentMitigation": "Postgres audit and revision metadata constrained append-only; public views gated",
+      "remainingRisk": "Staff account controls and operational review not yet implemented",
+      "status": "open"
+    },
+    {
+      "id": "R04",
+      "severity": "critical",
+      "actor": "Harasser, surveillance observer or subpoena requester",
+      "scenario": "Identification, intimidation or targeting of sources through traffic metadata, file EXIF, replicated content or provider access",
+      "controls": [
+        "risk disclosures",
+        "minimize request logs",
+        "strip metadata in approved media workflows",
+        "segregate confidential intake",
+        "no auto-replication"
+      ],
+      "currentMitigation": "No core confidential intake or distributed republication",
+      "remainingRisk": "No assertion of anonymity against endpoints, providers, device compromise, legal process or traffic correlation",
+      "status": "open"
+    },
+    {
+      "id": "R05",
+      "severity": "high",
+      "actor": "Attacker influencing public record/search results",
+      "scenario": "Spoofed source, changed archive output, misleading status or cached withdrawn allegations",
+      "controls": [
+        "source allowlist",
+        "provenance/revision signatures",
+        "no automatic story publication",
+        "revocation-driven cache invalidation"
+      ],
+      "currentMitigation": "Initiatives carry informational planning status, no fetched documents",
+      "remainingRisk": "Adapters and cache withdrawal reconciliation not implemented",
+      "status": "open"
+    },
+    {
+      "id": "R06",
+      "severity": "high",
+      "actor": "Remote traffic attacker or software supply chain adversary",
+      "scenario": "DoS, SSRF, dependency compromise, action credential theft and repository poisoning",
+      "controls": [
+        "rate limits",
+        "egress/DNS allowlist",
+        "pinned CI actions and lockfile",
+        "advisory scans",
+        "independent alerting"
+      ],
+      "currentMitigation": "Frozen lockfile, package audit, CI checks and restricted GitHub Actions permissions",
+      "remainingRisk": "No runtime perimeter, SBOM provenance/alerts or verified pen test",
+      "status": "open"
+    },
+    {
+      "id": "R07",
+      "severity": "critical",
+      "actor": "Buggy upstream partner or malicious publisher",
+      "scenario": "An allegedly approved private artifact is published or replicated without valid consent and redaction",
+      "controls": [
+        "public-only DTO schema",
+        "signer and release policy",
+        "dual-approval",
+        "irreversibility disclosure",
+        "reconciliation"
+      ],
+      "currentMitigation": "Integrations disabled and generic testimony route absent",
+      "remainingRisk": "No production-grade publication approval service or distributed retention process",
+      "status": "open"
+    },
+    {
+      "id": "R08",
+      "severity": "high",
+      "actor": "Credential harvester, account recovery adversary, or sender with mailing privileges",
+      "scenario": "Compromised accounts, unsolicited political contact, unauthorized marketing or enrollment of minors",
+      "controls": [
+        "phishing-resistant auth",
+        "secure recovery",
+        "consent purpose/version ledger",
+        "no implicit opt-in",
+        "suppression and abuse limits"
+      ],
+      "currentMitigation": "No account, mailing signup or promotional contact capability enabled",
+      "remainingRisk": "Auth and opt-in flows are planned, not built",
+      "status": "open"
+    }
+  ]
+}
