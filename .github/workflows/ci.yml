@@ -25,3 +25,29 @@ jobs:
         run: pnpm typecheck
       - name: Build public web
         run: pnpm build
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: jfa_ci
+          POSTGRES_PASSWORD: local_test_only
+          POSTGRES_DB: jfa_ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U jfa_ci -d jfa_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exercise migration, replay, synthetic seed and constraints
+        env:
+          PGPASSWORD: local_test_only
+        run: |
+          psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/migrations/0001_core.sql
+          psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/migrations/0001_core.sql
+          psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/seeds/0001_demo.sql
+          psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/tests/001_schema_assertions.sql

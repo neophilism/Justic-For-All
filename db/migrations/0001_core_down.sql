@@ -1,0 +1,28 @@
+-- JFA-05 ONLY for disposable local/test databases. Never run in production.
+BEGIN;
+DROP VIEW IF EXISTS core_public_content;
+DROP VIEW IF EXISTS core_public_initiatives;
+DROP TABLE IF EXISTS aggregate_metrics CASCADE;
+DROP TABLE IF EXISTS health_observations CASCADE;
+DROP TABLE IF EXISTS audit_events CASCADE;
+DROP TABLE IF EXISTS outbox_events CASCADE;
+DROP TABLE IF EXISTS public_projections CASCADE;
+DROP TABLE IF EXISTS module_connections CASCADE;
+DROP TABLE IF EXISTS moderation_actions CASCADE;
+DROP TABLE IF EXISTS content_reports CASCADE;
+DROP TABLE IF EXISTS privacy_requests CASCADE;
+DROP TABLE IF EXISTS subscriptions CASCADE;
+DROP TABLE IF EXISTS interest_offers CASCADE;
+DROP TABLE IF EXISTS consent_records CASCADE;
+DROP TABLE IF EXISTS publication_approvals CASCADE;
+DROP TABLE IF EXISTS cms_revisions CASCADE;
+DROP TABLE IF EXISTS cms_entries CASCADE;
+DROP TABLE IF EXISTS initiatives CASCADE;
+DROP TABLE IF EXISTS role_grants CASCADE;
+DROP TABLE IF EXISTS contact_points CASCADE;
+DROP TABLE IF EXISTS profiles CASCADE;
+DROP TABLE IF EXISTS authenticators CASCADE;
+DROP TABLE IF EXISTS identities CASCADE;
+DROP FUNCTION IF EXISTS jfa_forbid_history_rewrite();
+DELETE FROM jfa_schema_migrations WHERE version='0001_core';
+COMMIT;
