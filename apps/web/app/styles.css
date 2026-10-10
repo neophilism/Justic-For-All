@@ -76,3 +76,19 @@ footer { border-top:1px solid var(--line); display:flex; align-items:start; just
   .ui-note, .ui-panel, .ui-status, .ui-button, .actions a { border:1px solid CanvasText; }
   .ui-button:disabled { color:GrayText; }
 }
+
+/* JFA-11: clear public journeys and readable editorial layouts */
+.public-hero { max-width: 62rem; padding-bottom: 1.2rem; }
+.public-hero h1 { max-width: 18ch; }
+.public-section { padding-block: 1.5rem; }
+.public-article { max-width: 58rem; }
+.public-article section { padding-block: .7rem 1.4rem; }
+.public-journeys { display:grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:1rem; padding:0; margin-block:1.5rem; list-style:none; }
+.public-journey { background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:1.3rem; }
+.public-journey h2, .public-journey h3 { margin-top:0; font-size:1.18rem; }
+.public-journey p { max-width:52ch; }
+.public-journey a { font-weight:750; }
+.public-principles { padding-left:1.4rem; }
+.public-principles li { padding:.6rem 0 .8rem; }
+.public-principles h2 { margin-bottom:.45rem; }
+.public-status { border-inline-start:4px solid var(--accent); background:var(--soft); padding:1rem 1.4rem; border-top:0; }

@@ -2,6 +2,8 @@
 export const publicRoutes = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
+  { href: "/stories", label: "Stories (information)" },
+  { href: "/records", label: "Public records (information)" },
   { href: "/principles", label: "Principles" },
   { href: "/initiatives", label: "Initiatives" },
   { href: "/get-involved", label: "Get involved" },

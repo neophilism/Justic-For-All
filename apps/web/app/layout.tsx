@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <header className="site-header">
           <Link href="/" className="brand">Justice For All</Link>
           <nav aria-label="Main navigation">
-            {publicRoutes.filter((route) => ["/about","/principles","/initiatives","/get-involved"].includes(route.href)).map((route) => <Link key={route.href} href={route.href}>{route.label}</Link>)}
+            {publicRoutes.filter((route) => ["/about","/stories","/records","/initiatives","/get-involved"].includes(route.href)).map((route) => <Link key={route.href} href={route.href}>{route.label}</Link>)}
           </nav>
         </header>
         <main id="main">{children}</main>
