@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
-/** Until JFA-05/06, no DB exists to establish real readiness. */
-export function GET() {
+import { probeCoreReadiness } from "@jfa/db";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  const result = await probeCoreReadiness();
   return NextResponse.json(
-    { status: "not_ready", check: "readiness", reason: "core_database_unconfigured" },
-    { status: 503, headers: { "Cache-Control": "no-store" } }
+    { status: result.ready ? "ready" : "not_ready", check: "readiness", reason: result.reason },
+    { status: result.ready ? 200 : 503, headers: { "Cache-Control": "no-store" } }
   );
 }

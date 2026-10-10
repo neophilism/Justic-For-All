@@ -1,0 +1,24 @@
+# Local-only fixtures. Do not deploy this Compose configuration to production.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: jfa_dev
+      POSTGRES_PASSWORD: dev_only_password
+      POSTGRES_DB: jfa_dev
+    ports:
+      - "127.0.0.1:55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jfa_dev -d jfa_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    volumes:
+      - jfa_dev_pg:/var/lib/postgresql/data
+  mail:
+    image: axllent/mailpit:latest
+    ports:
+      - "127.0.0.1:8025:8025"
+      - "127.0.0.1:1025:1025"
+volumes:
+  jfa_dev_pg:
