@@ -1,0 +1,13 @@
+{
+  "name": "@jfa/core",
+  "version": "0.1.0-dev",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@jfa/contracts": "workspace:*"
+  }
+}

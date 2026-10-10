@@ -1,4 +1,6 @@
-export type Initiative = Readonly<{slug: string; name: string; description: string; status: "planning" | "building"}>;
+import type { InitiativeStatus } from "@jfa/contracts";
+
+export type Initiative = Readonly<{ slug: string; name: string; description: string; status: InitiativeStatus }>;
 
 export const initiatives: readonly Initiative[] = Object.freeze([
   {slug:"injustice-project",name:"The Injustice Project / Injustice Archive",description:"A dedicated future platform for voluntary testimony and publication controls.",status:"planning"},
