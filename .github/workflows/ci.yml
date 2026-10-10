@@ -19,6 +19,10 @@ jobs:
           node-version-file: '.node-version'
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
+      - name: Dependency audit (high and critical advisories)
+        run: pnpm audit --audit-level high
+      - name: Dependency license inventory
+        run: pnpm licenses list --json > /tmp/jfa-license-inventory.json
       - name: Secret scanner
         run: pnpm scan:secrets
       - name: Lint

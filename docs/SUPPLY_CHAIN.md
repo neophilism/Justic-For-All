@@ -9,6 +9,7 @@ Security release posture: **development, not certified**. The project must not d
 - ESLint/TypeScript and tests/build.
 - Tracked-file static secret heuristics (private-key headers, GitHub token-like strings, Neon credential patterns, AWS access-key IDs). False negatives are possible; secrets must still be stored only in a provider secret manager and independently reviewed.
 - Dependabot proposals require passing checks and review.
+- Every PR executes a dependency advisory check at the high-severity threshold and generates a license inventory for review. Vulnerability remediation or documented waiver must precede merge.
 - Postgres 16 migration replay and negative assertions are separate CI jobs.
 
 ## Additional controls required before production approval
