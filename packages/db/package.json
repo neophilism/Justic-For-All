@@ -1,0 +1,13 @@
+{
+  "name": "@jfa/db",
+  "version": "0.1.0-dev",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/schema.ts"
+  },
+  "types": "./src/schema.ts",
+  "dependencies": {
+    "drizzle-orm": "0.45.3"
+  }
+}
