@@ -23,7 +23,7 @@ export function validateInitiativeRegistry(value) {
     used.add(entry.slug);
     if (!stages.has(entry.status)) throw new Error("Status requires a verified service-release process");
     for (const [key,limit] of [["name",120],["description",350],["overview",1000]]) {
-      if (typeof entry[key] !== "string" || entry[key].trim() !== entry[key] || entry[key].length < 20 || entry[key].length > limit) throw new Error("Invalid " + key + " in " + entry.slug);
+      if (typeof entry[key] !== "string" || entry[key].trim() !== entry[key] || entry[key].length < (key === "name" ? 3 : 20) || entry[key].length > limit) throw new Error("Invalid " + key + " in " + entry.slug);
       if (/[<>]/.test(entry[key])) throw new Error("HTML content prohibited in public registry");
     }
   }
