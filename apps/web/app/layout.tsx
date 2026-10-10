@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { publicRoutes } from "../lib/public-routes";
 import "./styles.css";
 
 export const metadata: Metadata = {
@@ -16,14 +17,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <header className="site-header">
           <Link href="/" className="brand">Justice For All</Link>
           <nav aria-label="Main navigation">
-            <Link href="/about">About</Link>
-            <Link href="/initiatives">Initiatives</Link>
-            <Link href="/get-involved">Get involved</Link>
+            {publicRoutes.filter((route) => ["/about","/principles","/initiatives","/get-involved"].includes(route.href)).map((route) => <Link key={route.href} href={route.href}>{route.label}</Link>)}
           </nav>
         </header>
         <main id="main">{children}</main>
         <footer>
           <span>Justice For All</span>
+          <nav aria-label="Legal information">
+            <Link href="/privacy">Privacy</Link>{" · "}
+            <Link href="/terms">Site information</Link>
+          </nav>
           <span>Information only. Sensitive submissions are not accepted on this site.</span>
         </footer>
       </body>
