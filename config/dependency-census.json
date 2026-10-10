@@ -1,0 +1,130 @@
+{
+  "checkedAt": "2026-10-10",
+  "method": "Read-only GitHub source and repository metadata inspection, without production credentials or service probes",
+  "schemaVersion": 1,
+  "dependencies": [
+    {
+      "id": "e2eesa",
+      "repository": "neophilism/End-To-End-Everywhere-Security-Architecture-Standard",
+      "sourceCommit": "6ec85d51f9207da31f0e90fd8a7c82ffff8448f6",
+      "declaredVersion": "0.9.0-rc.2-dev",
+      "licenseSpdx": null,
+      "licenseStatus": "not selected in GitHub metadata",
+      "integrationMode": "standard-only",
+      "verifiedSourceDocuments": [
+        "https://github.com/neophilism/End-To-End-Everywhere-Security-Architecture-Standard/blob/6ec85d51f9207da31f0e90fd8a7c82ffff8448f6/VERSION",
+        "https://github.com/neophilism/End-To-End-Everywhere-Security-Architecture-Standard/blob/6ec85d51f9207da31f0e90fd8a7c82ffff8448f6/spec/conformance-engine.md",
+        "https://github.com/neophilism/End-To-End-Everywhere-Security-Architecture-Standard/blob/6ec85d51f9207da31f0e90fd8a7c82ffff8448f6/docs/AUDIT_REMEDIATION_PLAN.md"
+      ],
+      "documentedPaths": [],
+      "runtimeVerified": false,
+      "productionPermissionVerified": false,
+      "readyForSensitiveIntegration": false,
+      "notes": "Apply applicability and evidence; no blanket certification; audit remediation ongoing."
+    },
+    {
+      "id": "secure-intake",
+      "repository": "neophilism/Secure-Intake-Case-Workflow-Engine",
+      "sourceCommit": "0d12b66de37ba11d06413d9456c064b805a386ee",
+      "declaredVersion": "1.0.0-rc.9",
+      "licenseSpdx": null,
+      "licenseStatus": "not selected in GitHub metadata",
+      "integrationMode": "future-private-case",
+      "verifiedSourceDocuments": [
+        "https://github.com/neophilism/Secure-Intake-Case-Workflow-Engine/blob/0d12b66de37ba11d06413d9456c064b805a386ee/docs/architecture/0019-api-webhooks.md",
+        "https://github.com/neophilism/Secure-Intake-Case-Workflow-Engine/blob/0d12b66de37ba11d06413d9456c064b805a386ee/docs/architecture/0031-liveness-readiness-contracts.md"
+      ],
+      "documentedPaths": [
+        "GET /api/v1/openapi",
+        "GET /api/health",
+        "GET /api/ready"
+      ],
+      "runtimeVerified": false,
+      "productionPermissionVerified": false,
+      "readyForSensitiveIntegration": false,
+      "notes": "Organization-scoped API credentials; v1 read-only published surface; never expose private data via public website."
+    },
+    {
+      "id": "civic-registry",
+      "repository": "neophilism/Civic-Registry-Transparency-Engine",
+      "sourceCommit": "0ce810ab1fe4f876ebbf1c5909e29fbfe522713e",
+      "declaredVersion": "0.0.0 (root package)",
+      "licenseSpdx": null,
+      "licenseStatus": "not selected in GitHub metadata",
+      "integrationMode": "candidate-public-projection",
+      "verifiedSourceDocuments": [
+        "https://github.com/neophilism/Civic-Registry-Transparency-Engine/blob/0ce810ab1fe4f876ebbf1c5909e29fbfe522713e/packages/api/README.md",
+        "https://github.com/neophilism/Civic-Registry-Transparency-Engine/blob/0ce810ab1fe4f876ebbf1c5909e29fbfe522713e/docs/PUBLIC-API.md"
+      ],
+      "documentedPaths": [
+        "GET /api/v1/openapi.json"
+      ],
+      "runtimeVerified": false,
+      "productionPermissionVerified": false,
+      "readyForSensitiveIntegration": false,
+      "notes": "Contract exists in source; a live public approved data feed is not established."
+    },
+    {
+      "id": "compliance-audit",
+      "repository": "neophilism/Compliance-Authorization-Immutable-Audit-Engine",
+      "sourceCommit": "5b6c92b197130e427fb1f165a01220d73b158ff1",
+      "declaredVersion": "0.1.0",
+      "licenseSpdx": null,
+      "licenseStatus": "not selected in GitHub metadata",
+      "integrationMode": "candidate-privileged-audit",
+      "verifiedSourceDocuments": [
+        "https://github.com/neophilism/Compliance-Authorization-Immutable-Audit-Engine/blob/5b6c92b197130e427fb1f165a01220d73b158ff1/docs/sdk-evidence-reporting-health.md",
+        "https://github.com/neophilism/Compliance-Authorization-Immutable-Audit-Engine/blob/5b6c92b197130e427fb1f165a01220d73b158ff1/docs/production-readiness.md"
+      ],
+      "documentedPaths": [
+        "GET /health"
+      ],
+      "runtimeVerified": false,
+      "productionPermissionVerified": false,
+      "readyForSensitiveIntegration": false,
+      "notes": "SDK owns evidence and reporting access; no reason to expose privileged audit records through the public portal."
+    },
+    {
+      "id": "foia-aggregator",
+      "repository": "neophilism/FOIA_Aggregator",
+      "sourceCommit": "20ade058e4ac72edc30e8805ab6d0bc482c28311",
+      "declaredVersion": "no project release version verified",
+      "licenseSpdx": null,
+      "licenseStatus": "not selected in GitHub metadata",
+      "integrationMode": "candidate-public-records",
+      "verifiedSourceDocuments": [
+        "https://github.com/neophilism/FOIA_Aggregator/blob/20ade058e4ac72edc30e8805ab6d0bc482c28311/README.md",
+        "https://github.com/neophilism/FOIA_Aggregator/blob/20ade058e4ac72edc30e8805ab6d0bc482c28311/docs/PRESENTATION_DEPLOYMENT.md"
+      ],
+      "documentedPaths": [
+        "GET /healthz"
+      ],
+      "runtimeVerified": false,
+      "productionPermissionVerified": false,
+      "readyForSensitiveIntegration": false,
+      "notes": "FastAPI public archive with SQLite/B2 architecture. Corpus coverage and production endpoint require live confirmation."
+    },
+    {
+      "id": "engine-room",
+      "repository": "neophilism/Engine-Room",
+      "sourceCommit": "3e331741cd352a0a4974eb19a84ff920f87642f0",
+      "declaredVersion": "1.0.0-rc.1",
+      "licenseSpdx": null,
+      "licenseStatus": "not selected in GitHub metadata",
+      "integrationMode": "dev-monitoring-only",
+      "verifiedSourceDocuments": [
+        "https://github.com/neophilism/Engine-Room/blob/3e331741cd352a0a4974eb19a84ff920f87642f0/docs/live-project-integration.md",
+        "https://github.com/neophilism/Engine-Room/blob/3e331741cd352a0a4974eb19a84ff920f87642f0/.exechub/project.yml"
+      ],
+      "documentedPaths": [
+        "GET /api/health",
+        "GET /api/ready",
+        "GET /api/public-github-status"
+      ],
+      "runtimeVerified": false,
+      "productionPermissionVerified": false,
+      "readyForSensitiveIntegration": false,
+      "notes": "An executive monitoring app, not a public source of personal or sensitive project telemetry."
+    }
+  ]
+}
