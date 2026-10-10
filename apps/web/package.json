@@ -14,13 +14,13 @@
     "@jfa/ui": "workspace:*",
     "next": "15.5.24",
     "react": "19.1.1",
-    "react-dom": "19.1.1",
+    "react-dom": "19.3.0",
     "@jfa/db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "24.5.2",
     "@types/react": "19.1.16",
-    "@types/react-dom": "19.1.9",
+    "@types/react-dom": "19.3.0",
     "typescript": "5.9.2"
   }
 }
