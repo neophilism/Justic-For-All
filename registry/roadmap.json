@@ -1,0 +1,300 @@
+{
+  "repository": "neophilism/Justic-For-All",
+  "title": "Justic-For-All",
+  "version": 1,
+  "planVerified": true,
+  "plannedPrCount": 50,
+  "sourceFiles": [
+    ".exechub/project.yml",
+    "docs/DEVELOPMENT_PLAN.md",
+    ".exechub/approved-pr-mapping.json"
+  ],
+  "milestones": [
+    {
+      "id": "JFA-001",
+      "title": "Foundations and architecture — approved package 1 of 8",
+      "origin": "original",
+      "pullRequests": [
+        1
+      ]
+    },
+    {
+      "id": "JFA-002",
+      "title": "Foundations and architecture — approved package 2 of 8",
+      "origin": "original",
+      "pullRequests": [
+        2
+      ]
+    },
+    {
+      "id": "JFA-003",
+      "title": "Foundations and architecture — approved package 3 of 8",
+      "origin": "original",
+      "pullRequests": [
+        3
+      ]
+    },
+    {
+      "id": "JFA-004",
+      "title": "Foundations and architecture — approved package 4 of 8",
+      "origin": "original",
+      "pullRequests": [
+        4
+      ]
+    },
+    {
+      "id": "JFA-005",
+      "title": "Foundations and architecture — approved package 5 of 8",
+      "origin": "original",
+      "pullRequests": [
+        5
+      ]
+    },
+    {
+      "id": "JFA-006",
+      "title": "Foundations and architecture — approved package 6 of 8",
+      "origin": "original",
+      "pullRequests": [
+        6
+      ]
+    },
+    {
+      "id": "JFA-007",
+      "title": "Foundations and architecture — approved package 7 of 8",
+      "origin": "original",
+      "pullRequests": [
+        7
+      ]
+    },
+    {
+      "id": "JFA-008",
+      "title": "Foundations and architecture — approved package 8 of 8",
+      "origin": "original",
+      "pullRequests": [
+        12
+      ]
+    },
+    {
+      "id": "JFA-009",
+      "title": "Public experience and publishing — approved package 1 of 10",
+      "origin": "original",
+      "pullRequests": [
+        14
+      ]
+    },
+    {
+      "id": "JFA-010",
+      "title": "Public experience and publishing — approved package 2 of 10",
+      "origin": "original",
+      "pullRequests": [
+        15
+      ]
+    },
+    {
+      "id": "JFA-011",
+      "title": "Public experience and publishing — approved package 3 of 10",
+      "origin": "original",
+      "pullRequests": [
+        16
+      ]
+    },
+    {
+      "id": "JFA-012",
+      "title": "Public experience and publishing — approved package 4 of 10",
+      "origin": "original",
+      "pullRequests": [
+        17
+      ]
+    },
+    {
+      "id": "JFA-013",
+      "title": "Public experience and publishing — approved package 5 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-014",
+      "title": "Public experience and publishing — approved package 6 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-015",
+      "title": "Public experience and publishing — approved package 7 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-016",
+      "title": "Public experience and publishing — approved package 8 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-017",
+      "title": "Public experience and publishing — approved package 9 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-018",
+      "title": "Public experience and publishing — approved package 10 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-019",
+      "title": "Identity privacy and moderation — approved package 1 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-020",
+      "title": "Identity privacy and moderation — approved package 2 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-021",
+      "title": "Identity privacy and moderation — approved package 3 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-022",
+      "title": "Identity privacy and moderation — approved package 4 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-023",
+      "title": "Identity privacy and moderation — approved package 5 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-024",
+      "title": "Identity privacy and moderation — approved package 6 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-025",
+      "title": "Identity privacy and moderation — approved package 7 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-026",
+      "title": "Identity privacy and moderation — approved package 8 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-027",
+      "title": "Identity privacy and moderation — approved package 9 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-028",
+      "title": "Identity privacy and moderation — approved package 10 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-029",
+      "title": "Identity privacy and moderation — approved package 11 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-030",
+      "title": "Cross-platform integrations — approved package 1 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-031",
+      "title": "Cross-platform integrations — approved package 2 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-032",
+      "title": "Cross-platform integrations — approved package 3 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-033",
+      "title": "Cross-platform integrations — approved package 4 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-034",
+      "title": "Cross-platform integrations — approved package 5 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-035",
+      "title": "Cross-platform integrations — approved package 6 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-036",
+      "title": "Cross-platform integrations — approved package 7 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-037",
+      "title": "Cross-platform integrations — approved package 8 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-038",
+      "title": "Cross-platform integrations — approved package 9 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-039",
+      "title": "Cross-platform integrations — approved package 10 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-040",
+      "title": "Cross-platform integrations — approved package 11 of 11",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-041",
+      "title": "Operations and release — approved package 1 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-042",
+      "title": "Operations and release — approved package 2 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-043",
+      "title": "Operations and release — approved package 3 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-044",
+      "title": "Operations and release — approved package 4 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-045",
+      "title": "Operations and release — approved package 5 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-046",
+      "title": "Operations and release — approved package 6 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-047",
+      "title": "Operations and release — approved package 7 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-048",
+      "title": "Operations and release — approved package 8 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-049",
+      "title": "Operations and release — approved package 9 of 10",
+      "origin": "original"
+    },
+    {
+      "id": "JFA-050",
+      "title": "Operations and release — approved package 10 of 10",
+      "origin": "original"
+    }
+  ]
+}
