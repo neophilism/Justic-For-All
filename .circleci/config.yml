@@ -1,0 +1,78 @@
+version: 2.1
+
+# Full port of CI and E2EESA evidence validation. No test or audit steps removed.
+jobs:
+  application-security:
+    docker:
+      - image: cimg/node:22.23.3
+    resource_class: large
+    steps:
+      - checkout
+      - run:
+          name: Activate pinned pnpm version
+          command: corepack enable && corepack prepare pnpm@10.18.3 --activate
+      - run:
+          name: Install locked dependencies
+          command: pnpm install --frozen-lockfile
+      - run:
+          name: High/critical dependency audit
+          command: pnpm audit --audit-level high
+      - run:
+          name: Inventory third-party licenses
+          command: pnpm licenses list --json > /tmp/jfa-license-inventory.json
+      - run:
+          name: Secret scanner
+          command: pnpm scan:secrets
+      - run:
+          name: Lint complete workspace
+          command: pnpm lint
+      - run:
+          name: Unit and component tests
+          command: pnpm test
+      - run:
+          name: Web, database and worker TypeScript checks
+          command: pnpm typecheck
+      - run:
+          name: Produce deployable public application
+          command: pnpm build
+      - store_artifacts:
+          path: /tmp/jfa-license-inventory.json
+  postgres-schema-and-privacy:
+    docker:
+      - image: cimg/node:22.23.3
+      - image: cimg/postgres:16.10
+        environment:
+          POSTGRES_USER: jfa_ci
+          POSTGRES_PASSWORD: local_test_only
+          POSTGRES_DB: jfa_ci
+    resource_class: medium
+    environment:
+      PGPASSWORD: local_test_only
+    steps:
+      - checkout
+      - run:
+          name: Install psql client for real Postgres tests
+          command: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - run:
+          name: Apply and replay migrations, seed and assert editorial privacy
+          command: |
+            psql -h 127.0.0.1 -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/migrations/0001_core.sql
+            psql -h 127.0.0.1 -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/migrations/0001_core.sql
+            psql -h 127.0.0.1 -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/seeds/0001_demo.sql
+            psql -h 127.0.0.1 -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/tests/001_schema_assertions.sql
+            psql -h 127.0.0.1 -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/tests/002_editorial_draft_privacy.sql
+  security-status-record:
+    docker:
+      - image: cimg/python:3.12
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: E2EESA status evidence integrity, not certification
+          command: python3 scripts/validate_e2eesa_status.py
+workflows:
+  all-required-checks:
+    jobs:
+      - application-security
+      - postgres-schema-and-privacy
+      - security-status-record
