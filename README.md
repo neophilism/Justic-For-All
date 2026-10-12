@@ -37,3 +37,7 @@ Security references [E2EESA](https://github.com/neophilism/End-To-End-Everywhere
 The approved roadmap contains 50 **planned work packages**, not 50 completed GitHub PRs. Engine Room progress must map each work-package ID to a real merged pull request and must separately report live deployment/health.
 
 The GitHub repository slug is deliberately preserved as `Justic-For-All` to match the repository supplied by the project owner.
+
+## End-to-End Everywhere progress
+
+The canonical [security/e2eesa-status.json](security/e2eesa-status.json) records standard implementation, complete testing and independent expert review separately. Engine Room reads it automatically from GitHub. All initial stages are pending; existing profile locks and approved decisions remain authoritative. Read [adoption and independent-account instructions](docs/E2EESA_ADOPTION.md), and run `python3 scripts/validate_e2eesa_status.py`. Record validation does not establish product security or certification.
