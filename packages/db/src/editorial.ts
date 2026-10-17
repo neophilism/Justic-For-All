@@ -25,10 +25,15 @@ export async function createEditorialDraft(
   const auth=await client.query<{allowed:boolean}>(`SELECT EXISTS (
      SELECT 1 FROM identities i JOIN role_grants r ON r.subject_id=i.id
      WHERE i.id=$1 AND i.account_state='active' AND
-     r.role IN ('editor','admin') AND
+     r.role IN ('editor','admin') AND r.resource_scope='core' AND
      (r.expires_at IS NULL OR r.expires_at>now())
     ) AS allowed`,[actorId]);
   if(!auth.rows[0]?.allowed)throw new Error("Editor authorization required");
+
+  // A missing row cannot be locked with SELECT FOR UPDATE. Serialize by locale/slug
+  // before checking it so concurrent first drafts become versions 1 and 2.
+  const draftKey=`${doc.locale}\0${doc.slug}`;
+  await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",[draftKey]);
   const existing=await client.query<{id:string;visibility:string}>(`
      SELECT id,visibility FROM cms_entries WHERE slug=$1 AND locale=$2 FOR UPDATE
    `,[doc.slug,doc.locale]);
