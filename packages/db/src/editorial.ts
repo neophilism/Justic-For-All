@@ -29,6 +29,10 @@ export async function createEditorialDraft(
      (r.expires_at IS NULL OR r.expires_at>now())
     ) AS allowed`,[actorId]);
   if(!auth.rows[0]?.allowed)throw new Error("Editor authorization required");
+  // Serialize creation for an identical slug/locale before row locks are possible.
+  // The transaction-scoped advisory lock also prevents competing first revisions.
+  await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
+    [JSON.stringify([doc.locale,doc.slug])]);
   const existing=await client.query<{id:string;visibility:string}>(`
      SELECT id,visibility FROM cms_entries WHERE slug=$1 AND locale=$2 FOR UPDATE
    `,[doc.slug,doc.locale]);
