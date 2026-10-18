@@ -25,7 +25,7 @@ export async function createEditorialDraft(
   const auth=await client.query<{allowed:boolean}>(`SELECT EXISTS (
      SELECT 1 FROM identities i JOIN role_grants r ON r.subject_id=i.id
      WHERE i.id=$1 AND i.account_state='active' AND
-     r.role IN ('editor','admin') AND
+     r.role IN ('editor','admin') AND r.resource_scope='core' AND
      (r.expires_at IS NULL OR r.expires_at>now())
     ) AS allowed`,[actorId]);
   if(!auth.rows[0]?.allowed)throw new Error("Editor authorization required");
