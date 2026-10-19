@@ -5,3 +5,8 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # Node major type declarations must not outrun the pinned Node 22 runtime.
+      # Coordinate any future runtime/type major upgrade deliberately.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
