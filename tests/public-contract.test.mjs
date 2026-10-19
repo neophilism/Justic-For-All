@@ -19,10 +19,19 @@ test("schema references resolve and no private mutation is advertised",()=>{
   }
  }
  assert.ok(!Object.keys(spec.paths).some(p=>p.includes("/me")||p.includes("content-reports")||p.includes("interest")));
- assert.equal(Object.keys(spec.paths).length,5);
+ assert.equal(Object.keys(spec.paths).length,6);
 });
 test("private data is never exposed through the public initiatives projection",()=>{
  const src=readFileSync(new URL("../apps/web/app/api/v1/initiatives/route.ts",import.meta.url),"utf8");
  assert.match(src,/slug, name, description, status/);
  assert.doesNotMatch(src,/email|identity|private_case|service_ref/);
+});
+
+test("published editorial contract exposes only safe read fields",()=>{
+ const article=spec.paths["/api/v1/articles"].get;
+ assert.equal(article.operationId,"getPublishedArticle");
+ assert.ok(article.responses["404"]&&article.responses["503"]);
+ const publicKeys=Object.keys(spec.components.schemas.PublicEditorial.properties);
+ for(const key of ["authorLabel","reviewerLabel","publishedAt","reviewedAt","verificationLabel"])assert.ok(publicKeys.includes(key));
+ assert.ok(!publicKeys.some(key=>/identity|authorId|reviewerId|content_hash|workflow/i.test(key)));
 });

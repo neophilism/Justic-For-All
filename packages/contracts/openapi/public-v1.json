@@ -158,6 +158,60 @@
           }
         }
       }
+    },
+    "/api/v1/articles": {
+      "get": {
+        "operationId": "getPublishedArticle",
+        "summary": "Read one approved, current published article",
+        "tags": [
+          "Editorial"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current published revision with attribution and editorial verification caveat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicEditorialEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No approved public current revision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Editorial storage or review evidence unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -264,6 +318,100 @@
                 "type": "string"
               }
             }
+          }
+        }
+      },
+      "PublicEditorialEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "api_version",
+          "request_id",
+          "data"
+        ],
+        "properties": {
+          "api_version": {
+            "const": "1"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PublicEditorial"
+          }
+        }
+      },
+      "PublicEditorial": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slug",
+          "locale",
+          "entryType",
+          "version",
+          "title",
+          "summary",
+          "blocks",
+          "media",
+          "publishedAt",
+          "reviewedAt",
+          "authorLabel",
+          "reviewerLabel",
+          "verificationLabel"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "locale": {
+            "type": "string"
+          },
+          "entryType": {
+            "enum": [
+              "page",
+              "article",
+              "resource",
+              "faq"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "media": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "authorLabel": {
+            "type": "string"
+          },
+          "reviewerLabel": {
+            "type": "string"
+          },
+          "verificationLabel": {
+            "type": "string"
           }
         }
       }
