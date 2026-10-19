@@ -64,7 +64,7 @@ export async function transitionEditorialReview(
    FROM cms_revisions WHERE id=$1`,[workflow.source_revision_id]);
   const draft=source.rows[0];
   if(!draft||draft.editorial_state!=="draft"||!draft.author_id||!draft.content_hash)throw new Error("Review source is invalid");
-  validateEditorialDocument(draft.content);
+  const document=validateEditorialDocument(draft.content);
   const approvals=await client.query<{approver_id:string;decision:string}>(`SELECT DISTINCT ON (approver_id)
     approver_id,decision FROM publication_approvals WHERE revision_id=$1
     ORDER BY approver_id,decision_order DESC`,[draft.id]);
@@ -106,6 +106,18 @@ export async function transitionEditorialReview(
    if(action==="publish")publishedRevisionId=revision.rows[0].id;
    await client.query(`UPDATE cms_entries SET current_revision=$1,visibility=$2 WHERE id=$3`,
     [newVersion,action==="publish"?"public":"withdrawn",workflow.entry_id]);
+   const sourceRef=`cms:${workflow.entry_id}`;
+   await client.query(`UPDATE public_projections SET release_state='withdrawn',
+    safe_fields='{}'::jsonb,last_verified_at=now()
+    WHERE source_ref=$1 AND release_state='published'`,[sourceRef]);
+   if(action==="publish"){
+    const safeFields={slug:entry.rows[0].slug,locale:entry.rows[0].locale,
+     title:document.title,summary:document.summary,version:newVersion};
+    await client.query(`INSERT INTO public_projections
+     (source_ref,source_version,release_state,safe_fields,approved_at,published_at,last_verified_at)
+     VALUES($1,$2,'published',$3::jsonb,now(),now(),now())`,
+     [sourceRef,String(newVersion),JSON.stringify(safeFields)]);
+   }
    const publicEvent={slug:entry.rows[0].slug,locale:entry.rows[0].locale,version:newVersion,event:state};
    await client.query(`INSERT INTO outbox_events(event_type,subject_ref,schema_version,public_payload)
     VALUES($1,$2,'1',$3::jsonb)`,
