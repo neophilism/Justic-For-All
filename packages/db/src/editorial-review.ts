@@ -4,7 +4,7 @@ import {validateEditorialDocument} from "../../../scripts/lib/editorial-doc.mjs"
 
 const ID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 type Action="approve"|"reject"|"publish"|"withdraw";
-type Workflow={id:string;entry_id:string;source_revision_id:string;state:string;row_version:number;published_revision_id:string|null};
+type Workflow={id:string;entry_id:string;source_revision_id:string;state:"in_review"|"approved"|"rejected"|"published"|"withdrawn";row_version:number;published_revision_id:string|null};
 type Source={id:string;version:number;content:unknown;content_hash:string|null;author_id:string;editorial_state:string};
 async function requireRole(client:PoolClient,actorId:string,roles:readonly string[]) {
  const result=await client.query<{allowed:boolean}>(`SELECT EXISTS (
@@ -112,5 +112,26 @@ export async function transitionEditorialReview(
    VALUES($1,$2,$3,'allow')`,[actorId,`cms_${action}`,`cms-review:${workflowId}`]);
   await client.query("COMMIT");
   return {state:next.state,version:next.version};
+ }catch(error){await client.query("ROLLBACK").catch(()=>undefined);throw error;}
+}
+
+/** Authenticated staff preview of the exact immutable draft under review. */
+export async function loadEditorialReviewPreview(client:PoolClient,actorId:string,workflowId:string) {
+ if(!ID.test(actorId)||!ID.test(workflowId))throw new Error("Invalid preview input");
+ await client.query("BEGIN READ ONLY");
+ try {
+  await requireRole(client,actorId,["editor","reviewer","admin"]);
+  const result=await client.query<{
+   state:string;row_version:number;entry_id:string;source_revision_id:string;
+   version:number;content:unknown;content_hash:string|null
+  }>(`SELECT w.state,w.row_version,w.entry_id,w.source_revision_id,
+   r.version,r.content,r.content_hash FROM cms_review_workflows w
+   JOIN cms_revisions r ON r.id=w.source_revision_id WHERE w.id=$1`,[workflowId]);
+  const row=result.rows[0];
+  if(!row||!row.content_hash)throw new Error("Review preview unavailable");
+  const document=validateEditorialDocument(row.content);
+  await client.query("COMMIT");
+  return {state:row.state,workflowVersion:row.row_version,entryId:row.entry_id,
+   sourceVersion:row.version,contentHash:row.content_hash,document};
  }catch(error){await client.query("ROLLBACK").catch(()=>undefined);throw error;}
 }
