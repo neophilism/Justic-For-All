@@ -65,9 +65,10 @@ export async function transitionEditorialReview(
   const draft=source.rows[0];
   if(!draft||draft.editorial_state!=="draft"||!draft.author_id||!draft.content_hash)throw new Error("Review source is invalid");
   validateEditorialDocument(draft.content);
-  const approvals=await client.query<{approver_id:string}>(`SELECT approver_id FROM publication_approvals
-   WHERE revision_id=$1 AND decision='approve' ORDER BY decided_at,id`,[draft.id]);
-  const approverIds=approvals.rows.map(row=>row.approver_id);
+  const approvals=await client.query<{approver_id:string;decision:string}>(`SELECT DISTINCT ON (approver_id)
+    approver_id,decision FROM publication_approvals WHERE revision_id=$1
+    ORDER BY approver_id,decision_order DESC`,[draft.id]);
+  const approverIds=approvals.rows.filter(row=>row.decision==="approve").map(row=>row.approver_id);
   const next=editorialTransition({
    state:workflow.state,authorId:draft.author_id,highRisk:true,approverIds,version:workflow.row_version
   },action,{actorId,expectedVersion});

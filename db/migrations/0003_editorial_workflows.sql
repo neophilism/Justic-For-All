@@ -1,5 +1,7 @@
 -- JFA-14: one review workflow per source draft; immutable approval and revision history.
 BEGIN;
+ALTER TABLE publication_approvals ADD COLUMN IF NOT EXISTS decision_order bigint GENERATED ALWAYS AS IDENTITY;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_publication_decision_order ON publication_approvals(decision_order);
 CREATE TABLE IF NOT EXISTS cms_review_workflows (
  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
  entry_id uuid NOT NULL REFERENCES cms_entries(id),
@@ -30,9 +32,13 @@ BEGIN
    OR NEW.content_hash IS DISTINCT FROM source_row.content_hash THEN
   RAISE EXCEPTION 'published revision lacks approved immutable draft';
  END IF;
- SELECT count(DISTINCT p.approver_id),count(*) FILTER (WHERE p.approver_id=source_row.author_id)
- INTO approval_count,invalid_count FROM publication_approvals p
- WHERE p.revision_id=source_row.id AND p.decision='approve';
+ SELECT count(*) FILTER (WHERE p.decision='approve'),
+  count(*) FILTER (WHERE p.decision='approve' AND p.approver_id=source_row.author_id)
+ INTO approval_count,invalid_count FROM (
+  SELECT DISTINCT ON (approver_id) approver_id,decision
+  FROM publication_approvals WHERE revision_id=source_row.id
+  ORDER BY approver_id,decision_order DESC
+ ) p;
  IF approval_count<2 OR invalid_count>0 THEN
   RAISE EXCEPTION 'published revision requires two independent approvals';
  END IF;
