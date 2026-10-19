@@ -42,6 +42,17 @@ BEGIN
  IF NOT blocked THEN RAISE EXCEPTION 'revoked approval remained effective'; END IF;
  INSERT INTO publication_approvals(revision_id,approver_id,decision,reason_code)
  VALUES(draft_id,reviewer_b,'approve','test-reapprove');
+ INSERT INTO publication_approvals(revision_id,approver_id,decision,reason_code)
+ VALUES(draft_id,author_id,'approve','test-unauthorized');
+ blocked:=false;
+ BEGIN
+  INSERT INTO cms_revisions(entry_id,version,content,author_id,editorial_state,content_hash)
+  VALUES(entry_id,2,'{"title":"Synthetic review"}'::jsonb,author_id,'published',repeat('a',64));
+ EXCEPTION WHEN raise_exception THEN blocked:=true;
+ END;
+ IF NOT blocked THEN RAISE EXCEPTION 'author self-approval was accepted'; END IF;
+ INSERT INTO publication_approvals(revision_id,approver_id,decision,reason_code)
+ VALUES(draft_id,author_id,'revoke','test-cleanup');
  INSERT INTO cms_revisions(entry_id,version,content,author_id,editorial_state,content_hash)
  VALUES(entry_id,2,'{"title":"Synthetic review"}'::jsonb,author_id,'published',repeat('a',64))
  RETURNING id INTO published_id;

@@ -40,3 +40,12 @@ test("reviewers may revoke before publication and then reapprove",()=>{
  s=editorialTransition(s,"approve",{actorId:reviewerA,expectedVersion:5});
  assert.equal(s.state,"approved");
 });
+
+test("rejection closes review without publication or approval reuse",()=>{
+ let s=editorialTransition(draft,"submit",{actorId:author,expectedVersion:1});
+ s=editorialTransition(s,"approve",{actorId:reviewerA,expectedVersion:2});
+ s=editorialTransition(s,"reject",{actorId:reviewerB,expectedVersion:3});
+ assert.equal(s.state,"rejected");
+ assert.throws(()=>editorialTransition(s,"approve",{actorId:reviewerB,expectedVersion:4}));
+ assert.throws(()=>editorialTransition(s,"publish",{actorId:reviewerA,expectedVersion:4}));
+});
