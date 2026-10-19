@@ -3,7 +3,7 @@ import {editorialTransition} from "../../../scripts/lib/editorial-review.mjs";
 import {validateEditorialDocument} from "../../../scripts/lib/editorial-doc.mjs";
 
 const ID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-type Action="approve"|"reject"|"publish"|"withdraw";
+type Action="approve"|"revoke"|"reject"|"publish"|"withdraw";
 type Workflow={id:string;entry_id:string;source_revision_id:string;state:"in_review"|"approved"|"rejected"|"published"|"withdrawn";row_version:number;published_revision_id:string|null};
 type Source={id:string;version:number;content:unknown;content_hash:string|null;author_id:string;editorial_state:string};
 async function requireRole(client:PoolClient,actorId:string,roles:readonly string[]) {
@@ -47,10 +47,10 @@ export async function transitionEditorialReview(
  client:PoolClient,actorId:string,workflowId:string,action:Action,expectedVersion:number
 ) {
  if(!ID.test(actorId)||!ID.test(workflowId)||!Number.isSafeInteger(expectedVersion)||expectedVersion<2||
-  !["approve","reject","publish","withdraw"].includes(action))throw new Error("Invalid review transition input");
+  !["approve","revoke","reject","publish","withdraw"].includes(action))throw new Error("Invalid review transition input");
  await client.query("BEGIN");
  try {
-  const roles=action==="approve"||action==="reject"?["reviewer","admin"]:
+  const roles=action==="approve"||action==="revoke"||action==="reject"?["reviewer","admin"]:
    action==="publish"?["editor","admin"]:["admin"];
   await requireRole(client,actorId,roles);
   const found=await client.query<Workflow>(`SELECT id,entry_id,source_revision_id,state,row_version,published_revision_id
@@ -79,6 +79,10 @@ export async function transitionEditorialReview(
   if(action==="approve"){
    await client.query(`INSERT INTO publication_approvals(revision_id,approver_id,decision,reason_code)
     VALUES($1,$2,'approve','editorial_peer_review')`,[draft.id,actorId]);
+  }
+  if(action==="revoke"){
+   await client.query(`INSERT INTO publication_approvals(revision_id,approver_id,decision,reason_code)
+    VALUES($1,$2,'revoke','editorial_peer_review')`,[draft.id,actorId]);
   }
   if(action==="reject"){
    await client.query(`INSERT INTO publication_approvals(revision_id,approver_id,decision,reason_code)

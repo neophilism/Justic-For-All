@@ -27,3 +27,16 @@ test("stale, malformed and duplicate transitions fail closed",()=>{
  assert.throws(()=>editorialTransition(approved,"approve",{actorId:reviewerB,expectedVersion:3}));
  assert.throws(()=>editorialTransition({...approved,approverIds:[reviewerA,reviewerA]},"publish",{actorId:reviewerB,expectedVersion:3}));
 });
+
+test("reviewers may revoke before publication and then reapprove",()=>{
+ let s=editorialTransition(draft,"submit",{actorId:author,expectedVersion:1});
+ s=editorialTransition(s,"approve",{actorId:reviewerA,expectedVersion:2});
+ s=editorialTransition(s,"approve",{actorId:reviewerB,expectedVersion:3});
+ assert.equal(s.state,"approved");
+ s=editorialTransition(s,"revoke",{actorId:reviewerA,expectedVersion:4});
+ assert.equal(s.state,"in_review");
+ assert.deepEqual(s.approverIds,[reviewerB]);
+ assert.throws(()=>editorialTransition(s,"publish",{actorId:reviewerB,expectedVersion:5}));
+ s=editorialTransition(s,"approve",{actorId:reviewerA,expectedVersion:5});
+ assert.equal(s.state,"approved");
+});
