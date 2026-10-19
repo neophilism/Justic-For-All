@@ -33,6 +33,14 @@ export async function createEditorialDraft(
   // The transaction-scoped advisory lock also prevents competing first revisions.
   await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
     [JSON.stringify([doc.locale,doc.slug])]);
+  for(const media of doc.media){
+   if("asset_id" in media){
+    const asset=await client.query<{allowed:boolean}>(`SELECT EXISTS (
+      SELECT 1 FROM cms_media_assets WHERE id=$1 AND uploaded_by=$2 AND scan_state='clean'
+     ) AS allowed`,[media.asset_id,actorId]);
+    if(!asset.rows[0]?.allowed)throw new Error("Scanned media asset required");
+   }
+  }
   const existing=await client.query<{id:string;visibility:string}>(`
      SELECT id,visibility FROM cms_entries WHERE slug=$1 AND locale=$2 FOR UPDATE
    `,[doc.slug,doc.locale]);

@@ -55,11 +55,14 @@ export function validateEditorialDocument(value){
  if(total>50000)throw new Error("Editorial content exceeds maximum size");
  if(!Array.isArray(value.media)||value.media.length>12)throw new Error("Too many media references");
  for(const media of value.media){
-  if(!exact(media,["kind","source_url","alt","caption"])||!allowedMedia.has(media.kind))throw new Error("Invalid media metadata");
-  safeReference(media.source_url);
+  const external=exact(media,["kind","source_url","alt","caption"]);
+  const uploaded=exact(media,["kind","asset_id","alt","caption"]);
+  if((!external&&!uploaded)||!allowedMedia.has(media.kind)||uploaded&&media.kind!=="image")throw new Error("Invalid media metadata");
+  if(external)safeReference(media.source_url);
+  if(uploaded&&!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(media.asset_id))throw new Error("Invalid media asset ID");
   cleanText(media.alt,400,"alt text",8);
   cleanText(media.caption,700,"caption",8);
  }
- // This schema stores structured text and metadata only, never HTML, embeds or uploads.
+ // This schema stores structured text and media references only, never HTML, embeds or upload bytes.
  return structuredClone(value);
 }
