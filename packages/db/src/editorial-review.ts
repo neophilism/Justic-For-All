@@ -53,13 +53,16 @@ export async function transitionEditorialReview(
   const roles=action==="approve"||action==="revoke"||action==="reject"?["reviewer","admin"]:
    action==="publish"?["editor","admin"]:["admin"];
   await requireRole(client,actorId,roles);
+  const route=await client.query<{entry_id:string}>(`SELECT entry_id FROM cms_review_workflows WHERE id=$1`,[workflowId]);
+  if(!route.rows[0])throw new Error("Review workflow not found");
+  // Match draft-submission lock order: entry first, then workflow.
+  const entry=await client.query<{slug:string;locale:string;visibility:string;current_revision:number|null}>(`
+   SELECT slug,locale,visibility,current_revision FROM cms_entries WHERE id=$1 FOR UPDATE`,[route.rows[0].entry_id]);
+  if(!entry.rows[0])throw new Error("Editorial entry not found");
   const found=await client.query<Workflow>(`SELECT id,entry_id,source_revision_id,state,row_version,published_revision_id
    FROM cms_review_workflows WHERE id=$1 FOR UPDATE`,[workflowId]);
   const workflow=found.rows[0];
-  if(!workflow)throw new Error("Review workflow not found");
-  const entry=await client.query<{slug:string;locale:string;visibility:string;current_revision:number|null}>(`
-   SELECT slug,locale,visibility,current_revision FROM cms_entries WHERE id=$1 FOR UPDATE`,[workflow.entry_id]);
-  if(!entry.rows[0])throw new Error("Editorial entry not found");
+  if(!workflow||workflow.entry_id!==route.rows[0].entry_id)throw new Error("Review workflow changed");
   const source=await client.query<Source>(`SELECT id,version,content,content_hash,author_id,editorial_state
    FROM cms_revisions WHERE id=$1`,[workflow.source_revision_id]);
   const draft=source.rows[0];

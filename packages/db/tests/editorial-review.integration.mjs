@@ -25,11 +25,14 @@ test("editorial review publishes only two-person approved content and withdraws 
    VALUES($1,'article',$2,'en','private',1)`,[entry,slug]);
   await client.query(`INSERT INTO cms_revisions(entry_id,version,content,author_id,editorial_state,content_hash)
    VALUES($1,1,$2::jsonb,$3,'draft',$4)`,[entry,JSON.stringify(doc),author,"a".repeat(64)]);
+  await assert.rejects(submitEditorialReview(client,reviewerA,entry,1));
   const submitted=await submitEditorialReview(client,author,entry,1);
   assert.equal((await loadEditorialReviewPreview(client,reviewerA,submitted.workflowId)).document.title,doc.title);
   await assert.rejects(loadEditorialReviewPreview(client,disabled,submitted.workflowId));
+  await assert.rejects(transitionEditorialReview(client,reviewerA,randomUUID(),"approve",2));
   await assert.rejects(transitionEditorialReview(client,author,submitted.workflowId,"approve",2));
   await transitionEditorialReview(client,reviewerA,submitted.workflowId,"approve",2);
+  await assert.rejects(transitionEditorialReview(client,reviewerB,submitted.workflowId,"approve",2));
   await assert.rejects(transitionEditorialReview(client,reviewerA,submitted.workflowId,"publish",3));
   await transitionEditorialReview(client,reviewerB,submitted.workflowId,"approve",3);
   await transitionEditorialReview(client,reviewerA,submitted.workflowId,"revoke",4);
