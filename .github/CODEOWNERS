@@ -1,2 +1,3 @@
-# Initial maintainer. Additional owners may be appointed through reviewed changes.
-* @neophilism
+# No blanket CODEOWNERS assignment: the owner authorizes automated CI and AI-assisted review.
+# Do not auto-request review from @neophilism on every Dependabot or agent PR.
+# Add scoped code owners only when an actual separately required review policy is approved.
