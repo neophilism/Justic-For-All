@@ -17,6 +17,6 @@
     "scan:secrets": "node scripts/scan-secrets.mjs"
   },
   "devDependencies": {
-    "eslint": "9.36.0"
+    "eslint": "10.13.0"
   }
 }
