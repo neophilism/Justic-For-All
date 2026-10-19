@@ -7,7 +7,7 @@ test("small PNG requires a clean scanner verdict",async()=>{
  assert.equal(info.mime,"image/png");
  assert.equal(info.size,png.length);
  assert.match(info.sha256,/^[a-f0-9]{64}$/);
- assert.equal((await scanEditorialImage(png,"image/png",async()=>({verdict:"clean"}))).sha256,info.sha256);
+ assert.equal((await scanEditorialImage(png,"image/png",async()=>({verdict:"clean",scannerId:"test-scanner"}))).sha256,info.sha256);
  await assert.rejects(scanEditorialImage(png,"image/png",async()=>({verdict:"pending"})),/rejected/);
  await assert.rejects(scanEditorialImage(png,"image/png",undefined),/required/);
 });

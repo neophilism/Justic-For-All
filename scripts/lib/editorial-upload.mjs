@@ -28,5 +28,6 @@ export async function scanEditorialImage(input,declaredType,scanner){
  if(typeof scanner!=="function")throw new Error("Media scanner required");
  const result=await scanner(input,metadata);
  if(result?.verdict!=="clean")throw new Error("Media scan rejected");
- return metadata;
+ if(typeof result.scannerId!=="string"||!/^[a-z0-9][a-z0-9.-]{2,119}$/.test(result.scannerId))throw new Error("Invalid scanner identity");
+ return Object.freeze({...metadata,scannerId:result.scannerId});
 }
