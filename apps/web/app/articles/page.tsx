@@ -12,7 +12,7 @@ export async function generateMetadata({searchParams}:Context):Promise<Metadata>
  const result=await loadPublishedEditorial(slug);
  if(result.status!=="published")return {title:"Article unavailable",robots:{index:false,follow:false}};
  return {title:`${result.record.title} — Justice For All`,description:result.record.summary,
-  alternates:{canonical:`/articles?slug=${result.record.slug}`}};
+  alternates:{canonical:`/articles/${result.record.slug}`}};
 }
 export default async function ArticlePage({searchParams}:Context){
  const query=await searchParams;

@@ -8,7 +8,7 @@ Route | Purpose | Sensitive input
 /records | Records program information; no filing | None
 /principles | Civic principles | None
 /initiatives | Validated public informational initiative directory | None
-/initiatives/[slug] | Approved public informational initiative detail | None\n/articles?slug={slug} | Current reviewed published editorial article | Validated slug only
+/initiatives/[slug] | Approved public informational initiative detail | None\n/articles/{slug} | Current reviewed published editorial article | Validated slug only
 /get-involved | Safe public participation information | None
 /privacy | Interim privacy disclosure | None
 /terms | Interim information/terms boundary | None
