@@ -73,7 +73,7 @@ export async function readPublishedEditorial(client:PoolClient,slug:string,local
 let pool:pg.Pool|undefined;
 let initializedFor:string|undefined;
 export async function loadPublishedEditorial(slug:string,locale="en",env:NodeJS.ProcessEnv=process.env):
- Promise<{status:"published";record:PublicEditorial}|{status:"not_found"|"unavailable"}>{
+ Promise<{status:"published";record:PublicEditorial}|{status:"not_found"}|{status:"unavailable"}>{
  if(typeof slug!=="string"||slug.length>80||!SLUG.test(slug)||
   typeof locale!=="string"||!LOCALE.test(locale))return {status:"not_found"};
  const parsed=parseDatabaseUrl(env.DATABASE_URL,env.NODE_ENV==="production"?"production":"development");
