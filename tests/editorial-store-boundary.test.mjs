@@ -5,6 +5,7 @@ const source=readFileSync(new URL("../packages/db/src/editorial.ts",import.meta.
 test("draft storage requires active staff authorization and transactional rollback",()=>{
  assert.match(source,/i.account_state='active'/);
  assert.match(source,/r.role IN \('editor','admin'\)/);
+ assert.match(source,/r.resource_scope='core'/);
  assert.match(source,/BEGIN/);
  assert.match(source,/ROLLBACK/);
  assert.match(source,/cms_draft_created/);

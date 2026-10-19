@@ -45,6 +45,18 @@ export function EditorialDraftEditor({initial,onSave}:DraftEditorProps) {
   <p className="ui-note"><strong>Internal editing component.</strong> It is not connected to public intake. A trusted authenticated administrator must attach a server-validated save handler before use.</p>
   <div className="ui-panel">
    <h2>Draft fields</h2>
+   <label className="ui-label" htmlFor="editor-type">Entry type</label>
+   <select className="ui-input" id="editor-type" value={draft.entry_type}
+    onChange={event=>edit(doc=>({...doc,entry_type:event.target.value as EditorialDocument["entry_type"]}))}>
+    <option value="page">Page</option><option value="article">Article</option>
+    <option value="resource">Resource</option><option value="faq">FAQ</option>
+   </select>
+   <label className="ui-label" htmlFor="editor-slug">Slug</label>
+   <input className="ui-input" id="editor-slug" value={draft.slug} maxLength={80}
+    onChange={event=>edit(doc=>({...doc,slug:event.target.value}))}/>
+   <label className="ui-label" htmlFor="editor-locale">Locale</label>
+   <input className="ui-input" id="editor-locale" value={draft.locale} maxLength={5}
+    onChange={event=>edit(doc=>({...doc,locale:event.target.value}))}/>
    <label className="ui-label" htmlFor="editor-title">Title</label>
    <input className="ui-input" id="editor-title" value={draft.title} maxLength={180}
     onChange={e=>edit(d=>({...d,title:e.target.value}))}/>
@@ -85,6 +97,29 @@ export function EditorialDraftEditor({initial,onSave}:DraftEditorProps) {
     <button type="button" disabled={draft.blocks.length>=80} onClick={()=>addBlock("quote")}>Add quote</button>
     <button type="button" disabled={draft.blocks.length>=80} onClick={()=>addBlock("list")}>Add list</button>
    </div>
+  </section>
+  <section aria-label="Media references" className="ui-panel">
+   <h2>Media descriptions</h2>
+   <p className="ui-note">References are metadata only. Image bytes require a separate scanned, private upload before an asset ID can be attached.</p>
+   {draft.media.map((media,index)=><fieldset key={index}>
+    <legend>{media.kind} {index+1}</legend>
+    {"source_url" in media ? <>
+     <label className="ui-label" htmlFor={`media-url-${index}`}>HTTPS source URL</label>
+     <input className="ui-input" id={`media-url-${index}`} value={media.source_url}
+      onChange={event=>edit(doc=>({...doc,media:doc.media.map((item,i)=>i===index&&"source_url" in item?{...item,source_url:event.target.value}:item)}))}/>
+    </> : <p>Private scanned asset: {media.asset_id}</p>}
+    <label className="ui-label" htmlFor={`media-alt-${index}`}>Alternative text</label>
+    <input className="ui-input" id={`media-alt-${index}`} value={media.alt} maxLength={400}
+     onChange={event=>edit(doc=>({...doc,media:doc.media.map((item,i)=>i===index?{...item,alt:event.target.value}:item)}))}/>
+    <label className="ui-label" htmlFor={`media-caption-${index}`}>Caption and credit</label>
+    <input className="ui-input" id={`media-caption-${index}`} value={media.caption} maxLength={700}
+     onChange={event=>edit(doc=>({...doc,media:doc.media.map((item,i)=>i===index?{...item,caption:event.target.value}:item)}))}/>
+    <button type="button" onClick={()=>edit(doc=>({...doc,media:doc.media.filter((_,i)=>i!==index)}))}>Remove media reference</button>
+   </fieldset>)}
+   <button type="button" disabled={draft.media.length>=12} onClick={()=>edit(doc=>({...doc,media:[...doc.media,{
+    kind:"image",source_url:"https://example.org/image.jpg",
+    alt:"Describe this image for readers",caption:"Describe source and credit"
+   }]}))}>Add image reference</button>
   </section>
   <div className="ui-panel">
    <h2>Validation and save</h2>

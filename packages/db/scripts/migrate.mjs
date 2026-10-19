@@ -7,12 +7,15 @@ if (!parsed.ok) {
   console.error("Migration blocked: database configuration is missing or invalid.");
   process.exitCode = 1;
 } else {
-  const sql = await readFile(new URL("../../../db/migrations/0001_core.sql", import.meta.url),"utf8");
+  const migrations = ["0001_core.sql","0002_editorial_media.sql"];
   const client = new pg.Client({connectionString:parsed.url,connectionTimeoutMillis:5000});
   try {
     await client.connect();
-    await client.query(sql);
-    console.info("Applied or confirmed core migration 0001_core.");
+    for(const name of migrations){
+      const sql=await readFile(new URL("../../../db/migrations/"+name, import.meta.url),"utf8");
+      await client.query(sql);
+    }
+    console.info("Applied or confirmed core migrations.");
   } catch {
     console.error("Migration failed; inspect server-side protected database logs.");
     process.exitCode = 1;
