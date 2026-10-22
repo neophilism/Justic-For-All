@@ -50,7 +50,15 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.18.3
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: '.node-version'
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
       - name: Exercise migration, replay, synthetic seed and constraints
         env:
           PGPASSWORD: local_test_only
@@ -60,3 +68,7 @@ jobs:
           psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/seeds/0001_demo.sql
           psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/tests/001_schema_assertions.sql
           psql -h localhost -U jfa_ci -d jfa_ci -v ON_ERROR_STOP=1 -f db/tests/002_editorial_draft_privacy.sql
+      - name: Exercise editorial draft repository against PostgreSQL
+        env:
+          DATABASE_URL: postgres://jfa_ci:local_test_only@localhost:5432/jfa_ci
+        run: node --experimental-strip-types packages/db/scripts/test-editorial-postgres.mjs
