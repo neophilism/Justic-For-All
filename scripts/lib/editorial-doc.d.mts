@@ -7,6 +7,9 @@ export type EditorialDocument={
  entry_type:"page"|"article"|"resource"|"faq";
  slug:string;locale:string;title:string;summary:string;
  blocks:EditorialBlock[];
- media:Array<{kind:"image"|"audio"|"video";source_url:string;alt:string;caption:string}>;
+ media:Array<
+  {kind:"image"|"audio"|"video";source_url:string;alt:string;caption:string}
+  | {kind:"image";asset_id:string;alt:string;caption:string}
+ >;
 };
 export declare function validateEditorialDocument(value:unknown):EditorialDocument;

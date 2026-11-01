@@ -26,3 +26,15 @@ test("rejects unbounded body, unsupported types, malformed formats",()=>{
  const y=good();y.entry_type="personal-case";assert.throws(()=>validateEditorialDocument(y),/type/);
  const z=good();z.blocks[0].runs[0].emphasis="script";assert.throws(()=>validateEditorialDocument(z),/rich-text/);
 });
+
+test("accepts scanned-image references but rejects untrusted asset shapes",()=>{
+ const doc=good();
+ doc.media=[{kind:"image",asset_id:"123e4567-e89b-42d3-a456-426614174000",alt:"Descriptive photograph metadata",caption:"Reviewed publisher credit"}];
+ assert.equal(validateEditorialDocument(doc).media[0].asset_id,doc.media[0].asset_id);
+ const wrong=structuredClone(doc);wrong.media[0].asset_id="not-a-uuid";
+ assert.throws(()=>validateEditorialDocument(wrong),/asset ID/);
+ const unscanned=structuredClone(doc);unscanned.media[0].source_url="https://example.org/unscanned.jpg";
+ assert.throws(()=>validateEditorialDocument(unscanned),/metadata/);
+ const audio=structuredClone(doc);audio.media[0].kind="audio";
+ assert.throws(()=>validateEditorialDocument(audio),/metadata/);
+});
