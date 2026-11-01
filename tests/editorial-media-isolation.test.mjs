@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import {createEditorialImage} from '../packages/db/src/editorial-media.ts';
 import {scanEditorialImage} from '../scripts/lib/editorial-upload.mjs';
 
-const png=()=>Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aFQAAAABJRU5ErkJggg==','base64');
+const png=()=>Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGP4DwQACfsD/fteaysAAAAASUVORK5CYII=','base64');
 const actor='00000000-0000-4000-8000-000000000001';
 const digest=b=>createHash('sha256').update(b).digest('hex');
 const clean=async()=>({verdict:'clean',scannerId:'test-scanner'});

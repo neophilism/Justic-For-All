@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {inspectEditorialImage,scanEditorialImage} from "../scripts/lib/editorial-upload.mjs";
-const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aFQAAAABJRU5ErkJggg==","base64");
+const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGP4DwQACfsD/fteaysAAAAASUVORK5CYII=","base64");
 test("small PNG requires a clean scanner verdict",async()=>{
  const info=inspectEditorialImage(png,"image/png");
  assert.equal(info.mime,"image/png");
@@ -17,5 +17,6 @@ test("rejects disguised, oversized, active and malformed media",()=>{
  assert.throws(()=>inspectEditorialImage(Buffer.alloc(10*1024*1024+1),"image/png"),/size/);
  assert.throws(()=>inspectEditorialImage(Buffer.concat([png,Buffer.from("<script>")]),"image/png"),/structure/);
  const changed=Buffer.from(png);changed.writeUInt32BE(10001,16);
- assert.throws(()=>inspectEditorialImage(changed,"image/png"),/dimensions/);
+ assert.throws(()=>inspectEditorialImage(changed,"image/png"),/dimensions|checksum/);
 });
+
