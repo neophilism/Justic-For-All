@@ -24,10 +24,15 @@ export function inspectEditorialImage(input,declaredType){
 
 /** The scanner must return an explicit clean verdict; absence or error fails closed. */
 export async function scanEditorialImage(input,declaredType,scanner){
- const metadata=inspectEditorialImage(input,declaredType);
+ // The scanner must never retain the caller's mutable upload buffer.
+ if(!Buffer.isBuffer(input)||input.length<24||input.length>MAX_BYTES)throw new Error("Invalid image size");
+ const scannedBytes=Buffer.from(input);
+ const metadata=inspectEditorialImage(scannedBytes,declaredType);
  if(typeof scanner!=="function")throw new Error("Media scanner required");
- const result=await scanner(input,metadata);
+ const result=await scanner(scannedBytes,metadata);
+ if(createHash("sha256").update(scannedBytes).digest("hex")!==metadata.sha256)throw new Error("Media changed during scan");
  if(result?.verdict!=="clean")throw new Error("Media scan rejected");
  if(typeof result.scannerId!=="string"||!/^[a-z0-9][a-z0-9.-]{2,119}$/.test(result.scannerId))throw new Error("Invalid scanner identity");
  return Object.freeze({...metadata,scannerId:result.scannerId});
 }
+

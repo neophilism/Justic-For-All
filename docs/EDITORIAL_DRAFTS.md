@@ -16,6 +16,7 @@
 - `createEditorialImage` requires a scanner that explicitly reports a clean verdict and its scanner ID, a private object-store adapter, and a trusted actor ID. It rechecks active editor/admin authorization in PostgreSQL, stores a non-public object, inserts private asset metadata and audit evidence in one database transaction. If an earlier step fails, it attempts to remove the staged object. An ambiguous commit is never compensated blindly.
 - The new `0002_editorial_media.sql` migration defines private asset metadata. Uploaded asset references are accepted only for images and only when the draft writer finds a clean asset owned by the editor. Existing external HTTPS references remain metadata only and are not fetched or embedded by preview.
 - No object-store provider or scanner is provisioned here. The upload service is internal and cannot be reached from a public route. The protected CI workflow cannot be edited by this lease, so its database job does not yet run migration 0002 or the accompanying SQL test.
+- Upload bytes are copied before asynchronous scanning. Scanner buffers are isolated from caller and storage buffers; modification during scanning fails closed before database effects. Regression tests execute the TypeScript upload service with synthetic database/store adapters to check authorization, rollback, storage failure and uncertain-commit handling. These do not replace real PostgreSQL integration tests. The Node 22 test command enables its supported type-stripping flag for these runtime tests.
 
 ## Still required for full JFA-13 acceptance
 
@@ -26,3 +27,4 @@
 - Verified security evidence under E2EESA with no blanket conformance claim.
 
 Any admin endpoint added later must authenticate the actor independently of user-supplied IDs and fail closed without required authorization. Do not represent a source-controlled validation library as a live CMS.
+

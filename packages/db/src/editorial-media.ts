@@ -21,7 +21,11 @@ export async function createEditorialImage(
 ):Promise<Readonly<{assetId:string;sha256:string}>> {
  if(!actorPattern.test(actorId))throw new Error("Invalid actor identity");
  if(!store||typeof store.putPrivate!=="function"||typeof store.deletePrivate!=="function")throw new Error("Private media store required");
- const info=await scanEditorialImage(bytes,declaredType,scanner);
+ // Freeze upload content by value before the first asynchronous boundary.
+ // Caller/scanner buffer reuse must not change the bytes stored under this digest.
+ if(!Buffer.isBuffer(bytes)||bytes.length<24||bytes.length>10*1024*1024)throw new Error("Invalid image size");
+ const uploadBytes=Buffer.from(bytes);
+ const info=await scanEditorialImage(uploadBytes,declaredType,scanner);
  if(!/^[a-z0-9][a-z0-9.-]{2,119}$/.test(info.scannerId))throw new Error("Invalid scanner identity");
  const assetId=randomUUID();
  const objectKey=`editorial/private/${assetId}.${info.extension}`;
@@ -34,7 +38,7 @@ export async function createEditorialImage(
    AND r.resource_scope='core' AND (r.expires_at IS NULL OR r.expires_at>now())
   ) AS allowed`,[actorId]);
   if(!auth.rows[0]?.allowed)throw new Error("Editor authorization required");
-  await store.putPrivate(objectKey,bytes,info.mime);
+  await store.putPrivate(objectKey,Buffer.from(uploadBytes),info.mime);
   uploaded=true;
   await client.query(`INSERT INTO cms_media_assets
    (id,uploaded_by,object_key,mime_type,byte_size,sha256,scanner_id)
@@ -54,3 +58,4 @@ export async function createEditorialImage(
   throw error;
  }
 }
+
